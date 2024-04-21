@@ -1,9 +1,9 @@
 package com.edu.tool.repository;
 
-import com.edu.tool.model.Tool;
+import com.edu.tool.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Tool, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 }
