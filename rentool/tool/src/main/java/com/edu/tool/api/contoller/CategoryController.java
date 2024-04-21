@@ -1,5 +1,7 @@
 package com.edu.tool.api.contoller;
 
+import com.edu.tool.api.mapper.CategoryMapper;
+import com.edu.tool.api.model.request.CategoryRequest;
 import com.edu.tool.model.Category;
 import com.edu.tool.service.impl.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +26,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CategoryMapper categoryMapper;
 
     @Operation(summary = "Получить все категории")
     @ApiResponses(value = {
@@ -57,8 +60,8 @@ public class CategoryController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addCategory(@RequestBody Category category) {
-        categoryService.save(category);
+    public void addCategory(@RequestBody CategoryRequest category) {
+        categoryService.save(categoryMapper.mapToItem(category));
     }
 
     @Operation(summary = "Удалить категорию")
@@ -83,8 +86,8 @@ public class CategoryController {
     @PutMapping("/{id}")
     public Category updateCategory(
         @PathVariable Long id,
-        @RequestBody Category category
+        @RequestBody CategoryRequest category
     ) {
-        return categoryService.update(id, category);
+        return categoryService.update(id, categoryMapper.mapToItem(category));
     }
 }
