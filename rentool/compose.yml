@@ -11,7 +11,7 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql/data
     networks:
-      - backend
+      - backend-tool
 
   liquibase-migrations:
     image: liquibase/liquibase:4.25
@@ -27,13 +27,11 @@ services:
     volumes:
       - ./tool/src/main/resources/db.changelog:/liquibase/changelog
     networks:
-      - backend
+      - backend-tool
 
 
 volumes:
   postgresql: { }
-  prometheus_data: { }
-  grafana_data: { }
 
 networks:
-  backend: { }
+  backend-tool: { }
