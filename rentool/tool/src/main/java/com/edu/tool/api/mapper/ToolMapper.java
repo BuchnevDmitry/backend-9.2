@@ -6,6 +6,7 @@ import com.edu.tool.service.impl.BrandService;
 import com.edu.tool.service.impl.CategoryService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -25,5 +26,5 @@ public abstract class ToolMapper {
     @Mapping(target = "brand", expression = "java(brandService.getById(toolRequest.brandId()))")
     @Mapping(target = "category", expression = "java(categoryService.getById(toolRequest.categoryId()))")
     public abstract Tool mapToItem(ToolRequest toolRequest);
-
+    public abstract void updateTool(Tool source, @MappingTarget Tool target);
 }

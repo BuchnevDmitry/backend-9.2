@@ -1,5 +1,6 @@
 package com.edu.tool.service.impl;
 
+import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Category;
 import com.edu.tool.repository.CategoryRepository;
 import com.edu.tool.service.CrudService;
@@ -21,7 +22,7 @@ public class CategoryService implements CrudService<Category, Long> {
 
     @Override
     public Category getById(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Категория не найдена"));
+        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Категория не найдена"));
     }
 
     @Override

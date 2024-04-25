@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +61,7 @@ public class BrandController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addBrand(@RequestBody BrandRequest brand) {
+    public void addBrand(@RequestBody @Valid BrandRequest brand) {
         brandService.save(brandMapper.mapToItem(brand));
     }
 
@@ -86,7 +87,7 @@ public class BrandController {
     @PutMapping("/{id}")
     public Brand updateBrand(
         @PathVariable Long id,
-        @RequestBody BrandRequest brand
+        @RequestBody @Valid BrandRequest brand
     ) {
         return brandService.update(id, brandMapper.mapToItem(brand));
     }

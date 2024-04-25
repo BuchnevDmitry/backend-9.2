@@ -7,6 +7,7 @@ import com.edu.tool.service.impl.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +61,7 @@ public class CategoryController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addCategory(@RequestBody CategoryRequest category) {
+    public void addCategory(@RequestBody @Valid CategoryRequest category) {
         categoryService.save(categoryMapper.mapToItem(category));
     }
 
@@ -86,7 +87,7 @@ public class CategoryController {
     @PutMapping("/{id}")
     public Category updateCategory(
         @PathVariable Long id,
-        @RequestBody CategoryRequest category
+        @RequestBody @Valid CategoryRequest category
     ) {
         return categoryService.update(id, categoryMapper.mapToItem(category));
     }

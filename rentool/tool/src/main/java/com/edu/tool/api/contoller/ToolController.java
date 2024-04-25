@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import java.util.UUID;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +61,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addTool(@RequestBody ToolRequest category) {
+    public void addTool(@RequestBody @Valid ToolRequest category) {
         toolService.save(toolMapper.mapToItem(category));
     }
 
@@ -86,7 +87,7 @@ public class ToolController {
     @PutMapping("/{id}")
     public Tool updateTool(
         @PathVariable UUID id,
-        @RequestBody ToolRequest category
+        @RequestBody @Valid ToolRequest category
     ) {
         return toolService.update(id, toolMapper.mapToItem(category));
     }

@@ -1,5 +1,7 @@
 package com.edu.tool.service.impl;
 
+import com.edu.tool.api.mapper.ToolMapper;
+import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Tool;
 import com.edu.tool.repository.ToolRepository;
 import com.edu.tool.service.CrudService;
@@ -12,6 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ToolService implements CrudService<Tool, UUID> {
     private final ToolRepository toolRepository;
+    private final ToolMapper toolMapper;
     @Override
     public List<Tool> getAllItems() {
         return toolRepository.findAll();
@@ -19,7 +22,7 @@ public class ToolService implements CrudService<Tool, UUID> {
 
     @Override
     public Tool getById(UUID uuid) {
-        return toolRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Инструмент не найден"));
+        return toolRepository.findById(uuid).orElseThrow(() -> new NotFoundException("Инструмент не найден"));
     }
 
     @Override
@@ -35,13 +38,8 @@ public class ToolService implements CrudService<Tool, UUID> {
     @Override
     public Tool update(UUID uuid, Tool item) {
         Tool tool = getById(uuid);
-        tool.setBrand(item.getBrand());
-        tool.setCategory(item.getCategory());
-        tool.setCount(item.getCount());
-        tool.setModel(item.getModel());
-        tool.setDescription(item.getDescription());
-        tool.setImageUrl(item.getImageUrl());
-        tool.setPriceHour(item.getPriceHour());
+        item.setId(uuid);
+        toolMapper.updateTool(item, tool);
         return toolRepository.save(tool);
     }
 }

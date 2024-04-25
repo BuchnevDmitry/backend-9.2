@@ -1,5 +1,6 @@
 package com.edu.tool.service.impl;
 
+import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Brand;
 import com.edu.tool.repository.BrandRepository;
 import com.edu.tool.service.CrudService;
@@ -19,7 +20,7 @@ public class BrandService implements CrudService<Brand, Long> {
 
     @Override
     public Brand getById(Long id) {
-        return brandRepository.findById(id).orElseThrow(() -> new RuntimeException("Бренд не найден"));
+        return brandRepository.findById(id).orElseThrow(() -> new NotFoundException("Бренд не найден"));
     }
 
     @Override
