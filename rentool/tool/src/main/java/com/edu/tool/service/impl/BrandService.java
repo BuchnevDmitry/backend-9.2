@@ -3,11 +3,15 @@ package com.edu.tool.service.impl;
 import com.edu.tool.model.Brand;
 import com.edu.tool.repository.BrandRepository;
 import com.edu.tool.service.CrudService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class BrandService implements CrudService<Brand, Long> {
-    private BrandRepository brandRepository;
+    private final BrandRepository brandRepository;
     @Override
     public List<Brand> getAllItems() {
         return brandRepository.findAll();

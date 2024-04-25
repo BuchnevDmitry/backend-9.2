@@ -5,10 +5,11 @@ import com.edu.tool.repository.CategoryRepository;
 import com.edu.tool.service.CrudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-@Repository
+@Service
 @RequiredArgsConstructor
 public class CategoryService implements CrudService<Category, Long> {
 
