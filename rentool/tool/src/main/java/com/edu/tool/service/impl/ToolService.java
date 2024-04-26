@@ -6,6 +6,7 @@ import com.edu.tool.model.Tool;
 import com.edu.tool.repository.ToolRepository;
 import com.edu.tool.service.CrudService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +17,8 @@ public class ToolService implements CrudService<Tool, UUID> {
     private final ToolRepository toolRepository;
     private final ToolMapper toolMapper;
     @Override
-    public List<Tool> getAllItems() {
-        return toolRepository.findAll();
+    public List<Tool> getAllItems(PageRequest pageRequest) {
+        return toolRepository.findAll(pageRequest).getContent();
     }
 
     @Override

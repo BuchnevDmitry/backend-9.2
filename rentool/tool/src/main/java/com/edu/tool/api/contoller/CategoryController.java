@@ -2,6 +2,7 @@ package com.edu.tool.api.contoller;
 
 import com.edu.tool.api.mapper.CategoryMapper;
 import com.edu.tool.api.model.request.CategoryRequest;
+import com.edu.tool.api.model.response.ListCategoryResponse;
 import com.edu.tool.model.Category;
 import com.edu.tool.service.impl.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -37,8 +40,12 @@ public class CategoryController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
-    public List<Category> getCategories() {
-        return categoryService.getAllItems();
+    public ListCategoryResponse getCategories(
+        @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        List<Category> categories = categoryService.getAllItems(PageRequest.of(page,size));
+        return new ListCategoryResponse(categories, categories.size());
     }
 
     @Operation(summary = "Получить категорию")
