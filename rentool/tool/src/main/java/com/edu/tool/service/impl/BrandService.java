@@ -5,6 +5,7 @@ import com.edu.tool.model.Brand;
 import com.edu.tool.repository.BrandRepository;
 import com.edu.tool.service.CrudService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -13,9 +14,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandService implements CrudService<Brand, Long> {
     private final BrandRepository brandRepository;
-    @Override
-    public List<Brand> getAllItems() {
-        return brandRepository.findAll();
+    public List<Brand> getAllItems(PageRequest pageRequest) {
+        return brandRepository.findAll(pageRequest).getContent();
     }
 
     @Override

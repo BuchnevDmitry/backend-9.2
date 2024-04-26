@@ -2,6 +2,7 @@ package com.edu.tool.api.contoller;
 
 import com.edu.tool.api.mapper.BrandMapper;
 import com.edu.tool.api.model.request.BrandRequest;
+import com.edu.tool.api.model.response.ListBrandResponse;
 import com.edu.tool.model.Brand;
 import com.edu.tool.service.impl.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +40,12 @@ public class BrandController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
-    public List<Brand> getBrands() {
-        return brandService.getAllItems();
+    public ListBrandResponse getBrands(
+        @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "10") int size
+    ) {
+        List<Brand> brands = brandService.getAllItems(PageRequest.of(page,size));
+        return new ListBrandResponse(brands, brands.size());
     }
 
     @Operation(summary = "Получить бренд")
