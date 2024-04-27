@@ -4,16 +4,17 @@ import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Brand;
 import com.edu.tool.repository.BrandRepository;
 import com.edu.tool.service.CrudService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BrandService implements CrudService<Brand, Long> {
     private final BrandRepository brandRepository;
+
     public List<Brand> getAllItems(PageRequest pageRequest) {
         return brandRepository.findAll(pageRequest).getContent();
     }

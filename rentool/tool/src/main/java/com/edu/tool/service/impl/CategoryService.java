@@ -4,18 +4,18 @@ import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Category;
 import com.edu.tool.repository.CategoryRepository;
 import com.edu.tool.service.CrudService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements CrudService<Category, Long> {
 
     private final CategoryRepository categoryRepository;
+
     @Override
     public List<Category> getAllItems(PageRequest pageRequest) {
         return categoryRepository.findAll(pageRequest).getContent();
