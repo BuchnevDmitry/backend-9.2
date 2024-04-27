@@ -26,5 +26,6 @@ public abstract class ToolMapper {
     @Mapping(target = "brand", expression = "java(brandService.getById(toolRequest.brandId()))")
     @Mapping(target = "category", expression = "java(categoryService.getById(toolRequest.categoryId()))")
     public abstract Tool mapToItem(ToolRequest toolRequest);
+
     public abstract void updateTool(Tool source, @MappingTarget Tool target);
 }

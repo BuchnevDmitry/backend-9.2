@@ -1,8 +1,5 @@
 package com.edu.tool.exception;
 
-import java.util.Arrays;
-import java.util.List;
-
 abstract class CustomException extends RuntimeException {
 
     private final String code;

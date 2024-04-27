@@ -1,6 +1,5 @@
 package com.edu.tool.exception.handler;
 
-import com.edu.tool.api.contoller.BrandController;
 import com.edu.tool.api.contoller.CategoryController;
 import com.edu.tool.exception.ApiErrorResponse;
 import com.edu.tool.exception.NotFoundException;

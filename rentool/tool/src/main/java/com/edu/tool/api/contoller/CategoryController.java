@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/category")
+@RequestMapping("api/v1/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -44,7 +44,7 @@ public class CategoryController {
         @RequestParam(required = false, defaultValue = "0") int page,
         @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        List<Category> categories = categoryService.getAllItems(PageRequest.of(page,size));
+        List<Category> categories = categoryService.getAllItems(PageRequest.of(page, size));
         return new ListCategoryResponse(categories, categories.size());
     }
 

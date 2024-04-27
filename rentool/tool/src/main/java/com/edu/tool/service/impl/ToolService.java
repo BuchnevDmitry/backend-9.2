@@ -5,17 +5,18 @@ import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Tool;
 import com.edu.tool.repository.ToolRepository;
 import com.edu.tool.service.CrudService;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ToolService implements CrudService<Tool, UUID> {
     private final ToolRepository toolRepository;
     private final ToolMapper toolMapper;
+
     @Override
     public List<Tool> getAllItems(PageRequest pageRequest) {
         return toolRepository.findAll(pageRequest).getContent();

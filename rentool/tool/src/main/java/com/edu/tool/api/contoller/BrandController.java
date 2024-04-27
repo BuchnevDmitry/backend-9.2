@@ -8,8 +8,8 @@ import com.edu.tool.service.impl.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.List;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/brand")
+@RequestMapping("api/v1/brands")
 public class BrandController {
 
     private final BrandService brandService;
@@ -44,7 +44,7 @@ public class BrandController {
         @RequestParam(required = false, defaultValue = "0") int page,
         @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        List<Brand> brands = brandService.getAllItems(PageRequest.of(page,size));
+        List<Brand> brands = brandService.getAllItems(PageRequest.of(page, size));
         return new ListBrandResponse(brands, brands.size());
     }
 

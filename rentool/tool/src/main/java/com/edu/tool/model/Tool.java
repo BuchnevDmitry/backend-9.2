@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.UUID;
 
 @Entity
 @Table(name = "tool")
