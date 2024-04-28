@@ -1,5 +1,5 @@
 services:
-  postgresql:
+  postgresql-tool:
     container_name: postgresql-tool
     image: postgres:16
     ports:
@@ -9,14 +9,14 @@ services:
       POSTGRES_USER: ${TOOL_USERNAME}
       POSTGRES_PASSWORD: ${TOOL_PASSWORD}
     volumes:
-      - postgresql:/var/lib/postgresql/data
+      - postgresql-tool:/var/lib/postgresql/data
     networks:
       - backend-tool
 
-  liquibase-migrations:
+  liquibase-migrations-tool:
     image: liquibase/liquibase:4.25
     depends_on:
-      - postgresql
+      - postgresql-tool
     command:
       - --changelog-file=master.xml
       - --driver=org.postgresql.Driver
@@ -29,9 +29,40 @@ services:
     networks:
       - backend-tool
 
+  postgresql-rent:
+    container_name: postgresql-rent
+    image: postgres:16
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: rent
+      POSTGRES_USER: ${RENT_USERNAME}
+      POSTGRES_PASSWORD: ${RENT_PASSWORD}
+    volumes:
+      - postgresql-rent:/var/lib/postgresql/data
+    networks:
+      - backend-tool
+
+  liquibase-migrations-rent:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql-rent
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql-rent:5432/rent
+      - --username=${RENT_USERNAME}
+      - --password=${RENT_PASSWORD}
+      - update
+    volumes:
+      - ./rent/src/main/resources/db.changelog:/liquibase/changelog
+    networks:
+      - backend-tool
+
 
 volumes:
-  postgresql: { }
+  postgresql-tool: { }
+  postgresql-rent: { }
 
 networks:
   backend-tool: { }

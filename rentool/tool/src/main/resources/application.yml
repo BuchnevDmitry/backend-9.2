@@ -1,6 +1,6 @@
 spring:
   application:
-    name: scrapper
+    name: tool
 
   datasource:
     url: jdbc:postgresql://localhost:5433/${TOOL_DB_NAME}
