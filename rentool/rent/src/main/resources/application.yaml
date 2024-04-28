@@ -1,3 +1,17 @@
 spring:
   application:
     name: rent
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/${RENT_DB_NAME}
+    username: ${RENT_USERNAME}
+    password: ${RENT_PASSWORD}
+    driverClassName: org.postgresql.Driver
+
+
+server:
+  port: 8086
+
+
+logging:
+  config: classpath:log4j2-plain.xml
