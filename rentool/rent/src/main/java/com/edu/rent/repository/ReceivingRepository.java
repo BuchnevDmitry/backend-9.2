@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReceivingMethodRepository extends JpaRepository<ReceivingMethod, Long> {
+public interface ReceivingRepository extends JpaRepository<ReceivingMethod, Long> {
 }

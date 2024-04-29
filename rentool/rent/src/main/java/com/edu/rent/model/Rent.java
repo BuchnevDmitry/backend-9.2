@@ -1,24 +1,23 @@
 package com.edu.rent.model;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "rent")
@@ -55,9 +54,9 @@ public class Rent {
     @OneToOne
     private ReceivingMethod receivingMethod;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "rent_tool",
-               joinColumns = {@JoinColumn(name = "rent_id")},
-               inverseJoinColumns = {@JoinColumn(name = "tool_id")})
-    private List<Tool> tools= new ArrayList<>();
+    private String address;
+
+    @ElementCollection
+    @CollectionTable(name = "rent_tool", joinColumns = @JoinColumn(name = "rent_id"))
+    private Set<RentTool> tools = new HashSet<>();
 }
