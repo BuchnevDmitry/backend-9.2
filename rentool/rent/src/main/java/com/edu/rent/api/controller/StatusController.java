@@ -1,5 +1,7 @@
 package com.edu.rent.api.controller;
 
+import com.edu.rent.api.mapper.StatusMapper;
+import com.edu.rent.api.model.request.StatusRequest;
 import com.edu.rent.model.Status;
 import com.edu.rent.service.impl.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/statuses")
 public class StatusController {
     private final StatusService statusService;
+    private final StatusMapper statusMapper;
 
     @Operation(summary = "Получить все статусы")
     @ApiResponses(value = {
@@ -57,8 +60,8 @@ public class StatusController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addStatus(@RequestBody Status status) {
-        statusService.save(status);
+    public void addStatus(@RequestBody StatusRequest status) {
+        statusService.save(statusMapper.mapToItem(status));
     }
 
     @Operation(summary = "Удалить статус")
@@ -83,8 +86,8 @@ public class StatusController {
     @PutMapping("/{id}")
     public Status updateStatus(
         @PathVariable Long id,
-        @RequestBody Status status
+        @RequestBody StatusRequest status
     ) {
-        return statusService.update(id, status);
+        return statusService.update(id, statusMapper.mapToItem(status));
     }
 }

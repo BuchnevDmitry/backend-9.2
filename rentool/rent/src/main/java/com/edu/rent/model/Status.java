@@ -18,4 +18,5 @@ public class Status {
     private Long id;
 
     private String name;
+    private String description;
 }
