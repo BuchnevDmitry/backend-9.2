@@ -1,5 +1,7 @@
 package com.edu.rent.api.controller;
 
+import com.edu.rent.api.mapper.RentMapper;
+import com.edu.rent.api.model.request.RentRequest;
 import com.edu.rent.model.Rent;
 import com.edu.rent.service.impl.RentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RentController {
 
     private final RentService rentService;
+    private final RentMapper rentMapper;
 
     @Operation(summary = "Получить все аренды")
     @ApiResponses(value = {
@@ -59,8 +62,8 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addRent(@RequestBody Rent rent) {
-        rentService.save(rent);
+    public void addRent(@RequestBody RentRequest rent) {
+        rentService.save(rentMapper.mapToItem(rent));
     }
 
     @Operation(summary = "Удалить аренду")
@@ -85,8 +88,8 @@ public class RentController {
     @PutMapping("/{id}")
     public Rent updateRent(
         @PathVariable UUID id,
-        @RequestBody Rent rent
+        @RequestBody RentRequest rent
     ) {
-        return rentService.update(id, rent);
+        return rentService.update(id, rentMapper.mapToItem(rent));
     }
 }
