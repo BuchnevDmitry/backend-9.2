@@ -7,6 +7,7 @@ import com.edu.tool.repository.ToolRepository;
 import com.edu.tool.service.CrudService;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,11 @@ public class ToolService implements CrudService<Tool, UUID> {
     @Override
     public List<Tool> getAllItems(PageRequest pageRequest) {
         return toolRepository.findAll(pageRequest).getContent();
+    }
+
+    public List<Tool> getAllItems(List<UUID> listIds) {
+        List<Tool> tools = listIds.stream().map(id -> getById(id)).collect(Collectors.toList());
+        return tools;
     }
 
     @Override

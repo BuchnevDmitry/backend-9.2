@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,21 @@ public class ToolController {
         return new ListToolResponse(tools, tools.size());
     }
 
+    @Operation(summary = "Получить все иструменты по списку id")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Все иструменты получены")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/by-ids")
+    public ListToolResponse getTools(
+        @RequestParam @NotNull List<UUID> listIds
+    ) {
+        List<Tool> tools = toolService.getAllItems(listIds);
+        return new ListToolResponse(tools, tools.size());
+    }
+
     @Operation(summary = "Получить инструмент")
     @ApiResponses(value = {
         @ApiResponse(
@@ -56,7 +72,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Tool getTool(@PathVariable UUID id) {
+    public Tool getTool(@PathVariable @NotNull UUID id) {
         return toolService.getById(id);
     }
 
@@ -80,7 +96,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public void deleteTool(@PathVariable UUID id) {
+    public void deleteTool(@PathVariable @NotNull UUID id) {
         toolService.delete(id);
     }
 
@@ -93,7 +109,7 @@ public class ToolController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     public Tool updateTool(
-        @PathVariable UUID id,
+        @PathVariable @NotNull UUID id,
         @RequestBody @Valid ToolRequest category
     ) {
         return toolService.update(id, toolMapper.mapToItem(category));
