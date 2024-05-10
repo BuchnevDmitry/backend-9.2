@@ -27,7 +27,7 @@ jobs:
           cache: maven
 
       - name: maven build
-        run: mvn -pl tool -am package
+        run: mvn -pl ./rentool/tool -am package
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
