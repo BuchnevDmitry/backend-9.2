@@ -32,7 +32,7 @@ public class BrandController {
     private final BrandService brandService;
     private final BrandMapper brandMapper;
 
-    @Operation(summary = "Получить все бренды")
+    @Operation(summary = "Получить все бренды1")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
