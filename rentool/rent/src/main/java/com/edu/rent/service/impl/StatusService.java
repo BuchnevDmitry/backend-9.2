@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class StatusService implements CrudService<Status, Long> {
 
     private final StatusRepository statusRepository;
+
     @Override
     public List<Status> getAllItems() {
         return statusRepository.findAll();
