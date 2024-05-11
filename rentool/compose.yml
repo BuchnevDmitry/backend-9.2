@@ -60,13 +60,14 @@ services:
       - backend-tool
 
   tool:
-    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-15
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-16
     depends_on:
       - liquibase-migrations-tool
     environment:
       TOOL_DB_NAME: tool
       TOOL_USERNAME: postgres
       TOOL_PASSWORD: postgres
+      TOOL_HOST:
 
 volumes:
   postgresql-tool: { }
