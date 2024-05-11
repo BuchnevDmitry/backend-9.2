@@ -2,6 +2,7 @@ package com.edu.rent.api.controller;
 
 import com.edu.rent.api.mapper.RentMapper;
 import com.edu.rent.api.model.request.RentRequest;
+import com.edu.rent.api.model.response.ListRentResponse;
 import com.edu.rent.model.Rent;
 import com.edu.rent.service.impl.RentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +40,9 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
-    public List<Rent> getRents() {
+    public ListRentResponse getRents() {
         List<Rent> rents = rentService.getAllItems();
-        return rents;
+        return new ListRentResponse(rents, rents.size());
     }
 
     @Operation(summary = "Получить аренду")
