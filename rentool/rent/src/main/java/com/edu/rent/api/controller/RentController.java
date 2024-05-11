@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import java.util.UUID;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +52,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Rent getRent(@PathVariable UUID id) {
+    public Rent getRent(@PathVariable @NotNull UUID id) {
         return rentService.getById(id);
     }
 
@@ -62,7 +64,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addRent(@RequestBody RentRequest rent) {
+    public void addRent(@RequestBody @Valid RentRequest rent) {
         rentService.save(rentMapper.mapToItem(rent));
     }
 
@@ -74,7 +76,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public void deleteRent(@PathVariable UUID id) {
+    public void deleteRent(@PathVariable @NotNull UUID id) {
         rentService.delete(id);
     }
 
@@ -87,8 +89,8 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
     public Rent updateRent(
-        @PathVariable UUID id,
-        @RequestBody RentRequest rent
+        @PathVariable @NotNull UUID id,
+        @RequestBody @Valid RentRequest rent
     ) {
         return rentService.update(id, rentMapper.mapToItem(rent));
     }
