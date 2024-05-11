@@ -2,9 +2,9 @@ package com.edu.rent.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.UUID;
 
 @Embeddable
 @Getter

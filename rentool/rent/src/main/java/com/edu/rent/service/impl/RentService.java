@@ -3,16 +3,17 @@ package com.edu.rent.service.impl;
 import com.edu.rent.model.Rent;
 import com.edu.rent.repository.RentRepository;
 import com.edu.rent.service.CrudService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class RentService implements CrudService<Rent, UUID> {
 
     private final RentRepository rentRepository;
+
     @Override
     public List<Rent> getAllItems() {
         return rentRepository.findAll();

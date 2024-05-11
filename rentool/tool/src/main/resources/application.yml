@@ -3,7 +3,7 @@ spring:
     name: tool
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/${TOOL_DB_NAME}
+    url: jdbc:postgresql://${TOOL_DB_HOST:localhost}:${TOOL_DB_PORT:5433}/${TOOL_DB_NAME}
     username: ${TOOL_USERNAME}
     password: ${TOOL_PASSWORD}
     driverClassName: org.postgresql.Driver
