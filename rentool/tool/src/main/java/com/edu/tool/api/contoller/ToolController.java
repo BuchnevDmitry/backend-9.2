@@ -49,6 +49,24 @@ public class ToolController {
         return new ListToolResponse(tools, tools.size());
     }
 
+    @Operation(summary = "Получить все иструменты по категории")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Все иструменты по категории получены ")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/search")
+    public ListToolResponse getToolsByCategory(
+        @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "10") int size,
+        @RequestParam(required = true) String category
+
+        ) {
+        List<Tool> tools = toolService.getAllByCategory(category, PageRequest.of(page, size));
+        return new ListToolResponse(tools, tools.size());
+    }
+
     @Operation(summary = "Получить все иструменты по списку id")
     @ApiResponses(value = {
         @ApiResponse(

@@ -34,7 +34,7 @@ public class ReceivingController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
-    public List<ReceivingMethod> getMethods  () {
+    public List<ReceivingMethod> getMethods() {
         List<ReceivingMethod> receivingMethods = receivingService.getAllItems();
         return receivingMethods;
     }
