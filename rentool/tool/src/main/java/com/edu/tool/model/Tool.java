@@ -27,7 +27,7 @@ public class Tool {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "price_hour")
+    @Column(name = "price_day")
     private Long priceDay;
 
     private Long count;

@@ -27,8 +27,8 @@ public class ToolService implements CrudService<Tool, UUID> {
     }
 
     public List<Tool> getAllByCategory(String category, PageRequest pageRequest) {
-        Category byName = categoryRepository.findByName(category);
-        return toolRepository.findAllByCategory(byName, pageRequest).getContent();
+        List<Category> byName = categoryRepository.findAllByNameLikeIgnoreCase("%" + category + "%");
+        return toolRepository.findAllByCategories(byName, pageRequest).getContent();
     }
 
     public List<Tool> getAllItems(List<UUID> listIds) {
