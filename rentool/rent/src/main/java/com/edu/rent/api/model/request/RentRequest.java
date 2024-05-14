@@ -15,8 +15,6 @@ public record RentRequest(
     @NotNull
     Long price,
     @NotNull
-    UUID userId,
-    @NotNull
     Long statusId,
     @NotNull
     Long receivingMethodId,
