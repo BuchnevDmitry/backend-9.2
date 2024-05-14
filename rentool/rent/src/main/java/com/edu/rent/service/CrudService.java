@@ -1,6 +1,5 @@
 package com.edu.rent.service;
 
-import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 public interface CrudService<T, ID> {

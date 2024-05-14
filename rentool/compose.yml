@@ -59,6 +59,17 @@ services:
     networks:
       - backend-tool
 
+  tool:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:latest
+    depends_on:
+      - liquibase-migrations-tool
+    environment:
+      TOOL_DB_NAME: tool
+      TOOL_USERNAME: postgres
+      TOOL_PASSWORD: postgres
+      TOOL_HOST: 5432
+    networks:
+      - backend-tool
 
 volumes:
   postgresql-tool: { }

@@ -7,12 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class RentService{
 
     private final RentRepository rentRepository;
+  
     public List<Rent> getAllByUser(UUID uuid, PageRequest pageRequest) {
         return rentRepository.findAllByUserId(uuid, pageRequest).getContent();
     }
