@@ -17,7 +17,7 @@ public class MinioConfig {
     private String password;
 
     @Bean
-    public MinioClient minioClient() throws Exception {
+    public MinioClient minioClient() {
         return MinioClient.builder()
             .endpoint(minioHost)
             .credentials(user, password)
