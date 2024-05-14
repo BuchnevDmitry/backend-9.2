@@ -11,7 +11,7 @@ public record ToolRequest(
     @NotEmpty
     String imageUrl,
     @NotNull
-    Long priceHour,
+    Long priceDay,
     @NotNull
     Long count,
     @NotNull

@@ -5,6 +5,7 @@ import com.edu.tool.api.model.request.ToolRequest;
 import com.edu.tool.api.model.response.ListToolResponse;
 import com.edu.tool.model.Tool;
 import com.edu.tool.service.impl.ToolService;
+import com.edu.tool.sort.ToolSort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -43,9 +44,28 @@ public class ToolController {
     @GetMapping("/")
     public ListToolResponse getTools(
         @RequestParam(required = false, defaultValue = "0") int page,
-        @RequestParam(required = false, defaultValue = "10") int size
+        @RequestParam(required = false, defaultValue = "10") int size,
+        @RequestParam(required = false, defaultValue = "PRICE_ASC") ToolSort sortParam
     ) {
-        List<Tool> tools = toolService.getAllItems(PageRequest.of(page, size));
+        List<Tool> tools = toolService.getAllItems(PageRequest.of(page, size, sortParam.getSortValue()));
+        return new ListToolResponse(tools, tools.size());
+    }
+
+    @Operation(summary = "Получить все иструменты по категории")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Все иструменты по категории получены ")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/search")
+    public ListToolResponse getToolsByCategory(
+        @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "10") int size,
+        @RequestParam(required = true) String category
+
+        ) {
+        List<Tool> tools = toolService.getAllByCategory(category, PageRequest.of(page, size));
         return new ListToolResponse(tools, tools.size());
     }
 
