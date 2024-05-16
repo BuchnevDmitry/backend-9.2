@@ -9,9 +9,10 @@ spring:
     driverClassName: org.postgresql.Driver
 
 minio:
+  bucket: images
   host: http://localhost:9000
-  user: user
-  password: password
+  user: minio_user
+  password: minio_password
 
 
 server:

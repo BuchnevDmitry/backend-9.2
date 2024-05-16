@@ -59,21 +59,37 @@ services:
     networks:
       - backend-tool
 
-  tool:
-    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:latest
-    depends_on:
-      - liquibase-migrations-tool
-    environment:
-      TOOL_DB_NAME: tool
-      TOOL_USERNAME: postgres
-      TOOL_PASSWORD: postgres
-      TOOL_HOST: 5432
+#  tool:
+#    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:latest
+#    depends_on:
+#      - liquibase-migrations-tool
+#    environment:
+#      TOOL_DB_NAME: tool
+#      TOOL_USERNAME: postgres
+#      TOOL_PASSWORD: postgres
+#      TOOL_HOST: 5432
+#    networks:
+#      - backend-tool
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
     networks:
       - backend-tool
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    command: server ~/minio --console-address :9090
+    ports:
+      - '9090:9090'
+      - '9000:9000'
+    volumes:
+      - minio-data:/minio
 
 volumes:
   postgresql-tool: { }
   postgresql-rent: { }
+  minio-data: { }
 
 networks:
   backend-tool: { }

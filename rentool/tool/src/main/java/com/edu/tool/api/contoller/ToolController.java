@@ -16,6 +16,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,7 +67,7 @@ public class ToolController {
         @RequestParam(required = false, defaultValue = "10") int size,
         @RequestParam(required = true) String category
 
-        ) {
+    ) {
         List<Tool> tools = toolService.getAllByCategory(category, PageRequest.of(page, size));
         return new ListToolResponse(tools, tools.size());
     }
@@ -103,9 +106,12 @@ public class ToolController {
             description = "Инструмент добавлен")
     })
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/")
-    public void addTool(@RequestBody @Valid ToolRequest category) {
-        toolService.save(toolMapper.mapToItem(category));
+    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void addTool(
+        @RequestPart(value = "image") MultipartFile image,
+        @RequestPart("tool") ToolRequest tool
+    ) {
+        toolService.save(toolMapper.mapToItem(tool), image);
     }
 
     @Operation(summary = "Удалить инструмент")
@@ -130,8 +136,8 @@ public class ToolController {
     @PutMapping("/{id}")
     public Tool updateTool(
         @PathVariable @NotNull UUID id,
-        @RequestBody @Valid ToolRequest category
+        @RequestBody @Valid ToolRequest tool
     ) {
-        return toolService.update(id, toolMapper.mapToItem(category));
+        return toolService.update(id, toolMapper.mapToItem(tool));
     }
 }

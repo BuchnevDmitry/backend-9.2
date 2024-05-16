@@ -22,8 +22,11 @@ public class ImageService {
     @Value("${minio.bucket}")
     private String bucket;
 
+    @Value("${minio.host}")
+    private String minioHost;
+
     public String upload(
-        final ToolImage image
+        final MultipartFile image
     ) {
         try {
             createBucket();
@@ -31,7 +34,7 @@ public class ImageService {
             throw new ImageUploadException("Image upload failed: "
                 + e.getMessage());
         }
-        MultipartFile file = image.getFile();
+        MultipartFile file = image;
         if (file.isEmpty() || file.getOriginalFilename() == null) {
             throw new ImageUploadException("Image must have name.");
         }
@@ -44,7 +47,7 @@ public class ImageService {
                 + e.getMessage());
         }
         saveImage(inputStream, fileName);
-        return fileName;
+        return minioHost + "/" + bucket + "/"+ fileName;
     }
 
     @SneakyThrows

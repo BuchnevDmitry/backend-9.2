@@ -6,22 +6,25 @@ import com.edu.tool.model.Category;
 import com.edu.tool.model.Tool;
 import com.edu.tool.repository.CategoryRepository;
 import com.edu.tool.repository.ToolRepository;
-import com.edu.tool.service.CrudService;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.edu.tool.service.ImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class ToolService implements CrudService<Tool, UUID> {
+public class ToolService {
     private final ToolRepository toolRepository;
     private final CategoryRepository categoryRepository;
     private final ToolMapper toolMapper;
+    private final ImageService imageService;
 
-    @Override
     public List<Tool> getAllItems(PageRequest pageRequest) {
         return toolRepository.findAll(pageRequest).getContent();
     }
@@ -36,22 +39,23 @@ public class ToolService implements CrudService<Tool, UUID> {
         return tools;
     }
 
-    @Override
     public Tool getById(UUID uuid) {
         return toolRepository.findById(uuid).orElseThrow(() -> new NotFoundException("Инструмент не найден"));
     }
 
-    @Override
+    @Transactional
     public void delete(UUID uuid) {
         toolRepository.deleteById(uuid);
     }
 
-    @Override
-    public void save(Tool item) {
+    @Transactional
+    public void save(Tool item, MultipartFile image) {
+        String imageUrl = imageService.upload(image);
+        item.setImageUrl(imageUrl);
         toolRepository.save(item);
     }
 
-    @Override
+    @Transactional
     public Tool update(UUID uuid, Tool item) {
         Tool tool = getById(uuid);
         item.setId(uuid);
