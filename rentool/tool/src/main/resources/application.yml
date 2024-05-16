@@ -10,7 +10,7 @@ spring:
 
 minio:
   bucket: images
-  host: http://localhost:9000
+  host: ${MINIO_HOST_TOOL:http://localhost:9000}
   user: minio_user
   password: minio_password
 
