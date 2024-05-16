@@ -22,7 +22,7 @@ public class ImageService {
     @Value("${minio.bucket}")
     private String bucket;
 
-    @Value("${minio.host}")
+    @Value("${minio.host-image}")
     private String minioHost;
 
     public String upload(

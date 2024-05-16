@@ -59,17 +59,18 @@ services:
     networks:
       - backend-tool
 
-#  tool:
-#    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:latest
-#    depends_on:
-#      - liquibase-migrations-tool
-#    environment:
-#      TOOL_DB_NAME: tool
-#      TOOL_USERNAME: postgres
-#      TOOL_PASSWORD: postgres
-#      TOOL_HOST: 5432
-#    networks:
-#      - backend-tool
+  tool:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-18
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgresql-tool
+      - liquibase-migrations-tool
+      - minio
+    env_file:
+      - ./env.dev
+    networks:
+      - backend-tool
 
   minio:
     image: minio/minio:latest
