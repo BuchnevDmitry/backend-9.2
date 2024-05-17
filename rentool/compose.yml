@@ -117,11 +117,38 @@ services:
     volumes:
       - minio-data:/minio
 
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak_db
+    env_file:
+      - .env.dev
+    ports:
+      - "25432:5432"
+    networks:
+      - backend-tool
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    depends_on:
+      - keycloak-db
+    command: start-dev
+    env_file:
+      - .env.dev
+    ports:
+      - "8180:8080"
+    networks:
+      - backend-tool
+
+
 volumes:
   postgresql-tool: { }
   postgresql-rent: { }
   postgresql-user: { }
   minio-data: { }
+  keycloak-data: { }
 
 networks:
   backend-tool: { }
