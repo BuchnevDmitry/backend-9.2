@@ -8,6 +8,14 @@ spring:
     password: ${TOOL_PASSWORD}
     driverClassName: org.postgresql.Driver
 
+minio:
+  bucket: images
+  host: ${MINIO_HOST_TOOL:http://localhost:9000}
+  host-image: ${MINIO_HOST_IMAGE}
+  user: minio_user
+  password: minio_password
+
+
 server:
   port: 8085
 

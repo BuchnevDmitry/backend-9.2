@@ -8,8 +8,6 @@ public record ToolRequest(
     String model,
     @NotEmpty
     String description,
-    @NotEmpty
-    String imageUrl,
     @NotNull
     Long priceDay,
     @NotNull
