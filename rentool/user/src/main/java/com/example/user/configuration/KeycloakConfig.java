@@ -24,10 +24,6 @@ public class KeycloakConfig {
             .password(keycloakProperties.password())
             .clientId(keycloakProperties.clientId())
             .clientSecret(keycloakProperties.clientSecret())
-            .resteasyClient(new ResteasyClientBuilder()
-                .connectionPoolSize(10)
-                .build()
-            )
             .build();
     }
 }

@@ -15,9 +15,9 @@ logging:
   config: classpath:log4j2-plain.xml
 
 keycloak:
-  url: http://localhost:8000
+  url: http://localhost:8180
   realm: rentool
-  clientId: backend
-  clientSecret: fXAvWBxMpzOGSYJvGRe4ZOOp3NFCwdSf
+  clientId: kong
+  clientSecret: iL4DtVfRHYgJMi278u5n10n3l0aJ516Q
   username: backend@backend
   password: 123456789
