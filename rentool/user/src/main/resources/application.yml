@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: user
+
+  datasource:
+    url: jdbc:postgresql://${USER_DB_HOST:localhost}:${USER_DB_PORT:5437}/${USER_DB_NAME:user}
+    username: ${USER_USERNAME}
+    password: ${USER_PASSWORD}
+    driverClassName: org.postgresql.Driver
+
+server:
+  port: 8087
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+keycloak:
+  url: http://localhost:8180
+  realm: rentool
+  clientId: kong
+  clientSecret: iL4DtVfRHYgJMi278u5n10n3l0aJ516Q
+  username: backend@backend
+  password: 123456789

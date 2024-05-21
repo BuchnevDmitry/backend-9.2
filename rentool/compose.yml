@@ -59,18 +59,48 @@ services:
     networks:
       - backend-tool
 
-  tool:
-    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-18
+  postgresql-user:
+    container_name: postgresql-user
+    image: postgres:16
     ports:
-      - "8085:8085"
-    depends_on:
-      - postgresql-tool
-      - liquibase-migrations-tool
-      - minio
-    env_file:
-      - ./env.dev
+      - "5437:5432"
+    environment:
+      POSTGRES_DB: user
+      POSTGRES_USER: ${USER_USERNAME}
+      POSTGRES_PASSWORD: ${USER_PASSWORD}
+    volumes:
+      - postgresql-user:/var/lib/postgresql/data
     networks:
       - backend-tool
+
+  liquibase-migrations-user:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql-user
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql-user:5432/user
+      - --username=${USER_USERNAME}
+      - --password=${USER_PASSWORD}
+      - update
+    volumes:
+      - ./user/src/main/resources/db.changelog:/liquibase/changelog
+    networks:
+      - backend-tool
+
+#  tool:
+#    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-18
+#    ports:
+#      - "8085:8085"
+#    depends_on:
+#      - postgresql-tool
+#      - liquibase-migrations-tool
+#      - minio
+#    env_file:
+#      - ./env.dev
+#    networks:
+#      - backend-tool
 
   minio:
     image: minio/minio:latest
@@ -87,10 +117,38 @@ services:
     volumes:
       - minio-data:/minio
 
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak_db
+    env_file:
+      - ./env.dev
+    ports:
+      - "25432:5432"
+    networks:
+      - backend-tool
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    depends_on:
+      - keycloak-db
+    command: start-dev
+    env_file:
+      - ./env.dev
+    ports:
+      - "8180:8080"
+    networks:
+      - backend-tool
+
+
 volumes:
   postgresql-tool: { }
   postgresql-rent: { }
+  postgresql-user: { }
   minio-data: { }
+  keycloak-data: { }
 
 networks:
   backend-tool: { }

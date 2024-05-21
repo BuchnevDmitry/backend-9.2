@@ -49,6 +49,7 @@
     <modules>
         <module>tool</module>
         <module>rent</module>
+        <module>user</module>
     </modules>
 
     <dependencyManagement>
