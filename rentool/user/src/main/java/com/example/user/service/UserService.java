@@ -1,6 +1,7 @@
 package com.example.user.service;
 
 import com.example.user.api.model.request.UserRequest;
+import com.example.user.exception.NotFoundException;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
 import java.util.List;
@@ -25,6 +26,6 @@ public class UserService {
     }
 
     public User getUser(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Пользователь с данным id не найден!"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Пользователь с данным id не найден!"));
     }
 }
