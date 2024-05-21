@@ -7,6 +7,7 @@ import com.example.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +38,7 @@ public class UserController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addUser(@RequestBody UserRequest userRequest) {
+    public void addUser(@RequestBody @Valid UserRequest userRequest) {
         userService.addUser(userRequest);
     }
 
