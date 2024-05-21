@@ -3,6 +3,7 @@ package com.example.user.service;
 import com.example.user.Credentials;
 import com.example.user.api.model.request.UserRequest;
 import com.example.user.configuration.KeycloakProperties;
+import com.example.user.exception.KeycloakException;
 import com.example.user.model.User;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +42,12 @@ public class KeycloakService {
         if (response.getStatus() != 201) {
             String error = response.readEntity(String.class);
             log.error("Failed to create user. Status: {}, Error: {}", response.getStatus(), error);
-            throw new RuntimeException("Failed to create user: " + error);
+            throw new KeycloakException("Failed to create user: " + error);
         }
 
         String location = response.getHeaderString("Location");
         if (location == null || location.isEmpty()) {
-            throw new RuntimeException("Failed to get user ID from response");
+            throw new KeycloakException("Failed to get user ID from response");
         }
         String userId = location.substring(location.lastIndexOf('/') + 1);
         log.info("User created with ID: {}", userId);

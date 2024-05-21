@@ -2,6 +2,7 @@ package com.example.user.exception.handler;
 
 import com.example.user.exception.ApiErrorResponse;
 import com.example.user.exception.NotFoundException;
+import com.example.user.exception.KeycloakException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse handleNotFoundException(NotFoundException ex) {
+        return ex.toApiErrorResponse();
+    }
+
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "400",
+            description = "Некорректные параметры запроса")
+    })
+    @ExceptionHandler({KeycloakException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleUniqueExceptionException(KeycloakException ex) {
         return ex.toApiErrorResponse();
     }
 }
