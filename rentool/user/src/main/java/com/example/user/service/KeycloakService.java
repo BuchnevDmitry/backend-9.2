@@ -1,7 +1,7 @@
 package com.example.user.service;
 
 import com.example.user.Credentials;
-import com.example.user.api.model.UserRequest;
+import com.example.user.api.model.request.UserRequest;
 import com.example.user.configuration.KeycloakProperties;
 import com.example.user.model.User;
 import jakarta.ws.rs.core.Response;

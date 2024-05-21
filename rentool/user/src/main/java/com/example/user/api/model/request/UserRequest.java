@@ -1,4 +1,4 @@
-package com.example.user.api.model;
+package com.example.user.api.model.request;
 
 public record UserRequest(
     String login,

@@ -1,9 +1,12 @@
 package com.example.user.service;
 
-import com.example.user.api.model.UserRequest;
+import com.example.user.api.model.request.UserRequest;
 import com.example.user.model.User;
 import com.example.user.repository.UserRepository;
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,8 +18,13 @@ public class UserService {
     public void addUser(UserRequest userRequest) {
         User user = keycloakService.registrationUser(userRequest);
         userRepository.save(user);
-//        User user = new User();
-//        user.setLogin(userRequest.login());
-//        user.setLogin(userRequest.login());
+    }
+
+    public List<User> getUsers(PageRequest pageRequest) {
+        return userRepository.findAll(pageRequest).getContent();
+    }
+
+    public User getUser(UUID id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("Пользователь с данным id не найден!"));
     }
 }
