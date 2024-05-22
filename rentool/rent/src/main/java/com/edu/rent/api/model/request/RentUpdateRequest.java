@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public record RentUpdateRequest(
     @NotNull
@@ -13,6 +14,8 @@ public record RentUpdateRequest(
     OffsetDateTime endDate,
     @NotNull
     Long price,
+    @NotNull
+    UUID userId,
     @NotNull
     Long statusId,
     @NotNull

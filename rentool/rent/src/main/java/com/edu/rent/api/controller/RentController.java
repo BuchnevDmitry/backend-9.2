@@ -127,13 +127,9 @@ public class RentController {
     @PutMapping("/{id}")
     public Rent updateRent(
         @PathVariable @NotNull UUID id,
-        @RequestBody @Valid RentUpdateRequest rent,
-        @RequestHeader("Authorization") String token
-
+        @RequestBody @Valid RentUpdateRequest rent
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
-        log.info("userId: {}", userId);
-        return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent), userId);
+        return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent));
     }
 
     @Operation(summary = "Изменить стастус аренды в состояние отмены")

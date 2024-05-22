@@ -38,10 +38,9 @@ public class RentService{
         rentRepository.save(item);
     }
 
-    public Rent update(UUID rentId, Rent item, UUID userId) {
+    public Rent update(UUID rentId, Rent item) {
         Rent rent = getById(rentId);
         item.setId(rent.getId());
-        item.setUserId(userId);
         rentMapper.updateRent(item, rent);
         return rentRepository.save(rent);
     }
