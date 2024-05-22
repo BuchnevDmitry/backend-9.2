@@ -70,7 +70,6 @@ public class RentController {
         @RequestParam(required = false, defaultValue = "10") int size,
         @RequestHeader("Authorization") String token
     ) {
-        log.info("jwt: {}", token);
         UUID userId = jwtParser.getIdFromAccessToken(token);
         log.info("userId: {}", userId);
         List<Rent> rents = rentService.getAllByUser(userId, PageRequest.of(page, size));
@@ -101,7 +100,6 @@ public class RentController {
         @RequestBody @Valid RentCreateRequest rent,
         @RequestHeader("Authorization") String token
     ) {
-        log.info("jwt: {}", token);
         UUID userId = jwtParser.getIdFromAccessToken(token);
         log.info("userId: {}", userId);
         rentService.save(rentMapper.mapCreateRequestToItem(rent), userId);
@@ -133,7 +131,6 @@ public class RentController {
         @RequestHeader("Authorization") String token
 
     ) {
-        log.info("jwt: {}", token);
         UUID userId = jwtParser.getIdFromAccessToken(token);
         log.info("userId: {}", userId);
         return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent), userId);
@@ -148,9 +145,11 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/cancel")
     public Rent changeStatusOnCancel(
-        @PathVariable @NotNull UUID id
+        @PathVariable @NotNull UUID id,
+        @RequestHeader("Authorization") String token
     ) {
-        return rentService.changeStatusOnCancel(id);
+        UUID userId = jwtParser.getIdFromAccessToken(token);
+        return rentService.changeStatusOnCancel(id, userId);
     }
 
     @Operation(summary = "Изменить стастус аренды в состояние возврата")
@@ -162,8 +161,10 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/return")
     public Rent changeStatusOnReturn(
-        @PathVariable @NotNull UUID id
+        @PathVariable @NotNull UUID id,
+        @RequestHeader("Authorization") String token
     ) {
-        return rentService.changeStatusOnReturn(id);
+        UUID userId = jwtParser.getIdFromAccessToken(token);
+        return rentService.changeStatusOnReturn(id, userId);
     }
 }

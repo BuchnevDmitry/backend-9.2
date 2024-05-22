@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +46,11 @@ public class RentService{
         return rentRepository.save(rent);
     }
 
-    public Rent changeStatusOnCancel(UUID uuid) {
+    public Rent changeStatusOnCancel(UUID uuid, UUID userId) {
         Rent rent = getById(uuid);
+        if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
+            throw new RuntimeException("Пользователь не имеет доступа к данному ресурсу!");
+        }
         if (rent.getStatus().getId().equals((long) 1) || rent.getStatus().getId().equals((long) 2)) {
             rent.setStatus(statusService.getById((long) 5));
         } else {
@@ -57,8 +59,11 @@ public class RentService{
         return rentRepository.save(rent);
     }
 
-    public Rent changeStatusOnReturn(UUID uuid) {
+    public Rent changeStatusOnReturn(UUID uuid, UUID userId) {
         Rent rent = getById(uuid);
+        if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
+            throw new RuntimeException("Пользователь не имеет доступа к данному ресурсу!");
+        }
         if (rent.getStatus().getId().equals((long) 3)) {
             rent.setStatus(statusService.getById((long) 6));
         } else {

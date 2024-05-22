@@ -11,4 +11,5 @@ import java.util.UUID;
 @Repository
 public interface RentRepository extends JpaRepository<Rent, UUID> {
     Page<Rent> findAllByUserId(UUID uuid, Pageable pageable);
+    boolean existsByIdAndUserId(UUID rentId, UUID userId);
 }
