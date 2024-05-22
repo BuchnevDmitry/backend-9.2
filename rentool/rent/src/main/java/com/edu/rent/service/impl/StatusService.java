@@ -24,6 +24,10 @@ public class StatusService implements CrudService<Status, Long> {
         return statusRepository.findById(id).orElseThrow(() -> new NotFoundException("Статус не найден"));
     }
 
+    public Status getByName(String name) {
+        return statusRepository.findByName(name).orElseThrow(() -> new NotFoundException("Статус не найден"));
+    }
+
     @Override
     public void delete(Long id) {
         statusRepository.deleteById(id);

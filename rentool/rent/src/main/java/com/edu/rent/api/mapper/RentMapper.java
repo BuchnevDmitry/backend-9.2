@@ -28,7 +28,7 @@ public abstract class RentMapper {
         this.timeReceivingService = timeReceivingService;
     }
 
-    @Mapping(target = "status", expression = "java(statusService.getById((long) 1))")
+    @Mapping(target = "status", expression = "java(statusService.getByName(\"AWAITING_CONFIRMATION\"))")
     @Mapping(target = "receivingMethod", expression = "java(receivingService.getById(rentRequest.receivingMethodId()))")
     @Mapping(target = "timeReceiving", expression = "java(timeReceivingService.getById(rentRequest.timeReceivingId()))")
     public abstract Rent mapCreateRequestToItem(RentCreateRequest rentRequest);
