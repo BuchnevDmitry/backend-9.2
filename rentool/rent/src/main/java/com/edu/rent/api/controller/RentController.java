@@ -129,9 +129,14 @@ public class RentController {
     @PutMapping("/{id}")
     public Rent updateRent(
         @PathVariable @NotNull UUID id,
-        @RequestBody @Valid RentUpdateRequest rent
+        @RequestBody @Valid RentUpdateRequest rent,
+        @RequestHeader("Authorization") String token
+
     ) {
-        return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent));
+        log.info("jwt: {}", token);
+        UUID userId = jwtParser.getIdFromAccessToken(token);
+        log.info("userId: {}", userId);
+        return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent), userId);
     }
 
     @Operation(summary = "Изменить стастус аренды в состояние отмены")
@@ -148,7 +153,7 @@ public class RentController {
         return rentService.changeStatusOnCancel(id);
     }
 
-    @Operation(summary = "Изменить стастус аренды в состояние отмены")
+    @Operation(summary = "Изменить стастус аренды в состояние возврата")
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",

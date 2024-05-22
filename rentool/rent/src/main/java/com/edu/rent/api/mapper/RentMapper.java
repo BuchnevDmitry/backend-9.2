@@ -8,6 +8,7 @@ import com.edu.rent.service.impl.StatusService;
 import com.edu.rent.service.impl.TimeReceivingService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
@@ -36,4 +37,6 @@ public abstract class RentMapper {
     @Mapping(target = "receivingMethod", expression = "java(receivingService.getById(rentRequest.receivingMethodId()))")
     @Mapping(target = "timeReceiving", expression = "java(timeReceivingService.getById(rentRequest.timeReceivingId()))")
     public abstract Rent mapUpdateRequestToItem(RentUpdateRequest rentRequest);
+
+    public abstract void updateRent(Rent source, @MappingTarget Rent target);
 }
