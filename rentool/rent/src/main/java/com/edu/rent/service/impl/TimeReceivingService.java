@@ -1,5 +1,6 @@
 package com.edu.rent.service.impl;
 
+import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.TimeReceiving;
 import com.edu.rent.repository.TimeReceivingRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,6 @@ public class TimeReceivingService {
     }
 
     public TimeReceiving getById(Long id) {
-        return timeReceivingRepository.findById(id).orElseThrow(() -> new RuntimeException("Временной промежуток получения не найден"));
+        return timeReceivingRepository.findById(id).orElseThrow(() -> new NotFoundException("Временной промежуток получения не найден"));
     }
 }

@@ -1,5 +1,6 @@
 package com.edu.rent.service.impl;
 
+import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.Status;
 import com.edu.rent.repository.StatusRepository;
 import com.edu.rent.service.CrudService;
@@ -20,7 +21,7 @@ public class StatusService implements CrudService<Status, Long> {
 
     @Override
     public Status getById(Long id) {
-        return statusRepository.findById(id).orElseThrow(() -> new RuntimeException("Статус не найден"));
+        return statusRepository.findById(id).orElseThrow(() -> new NotFoundException("Статус не найден"));
     }
 
     @Override

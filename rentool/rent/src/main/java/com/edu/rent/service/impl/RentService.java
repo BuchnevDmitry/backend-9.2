@@ -1,6 +1,9 @@
 package com.edu.rent.service.impl;
 
 import com.edu.rent.api.mapper.RentMapper;
+import com.edu.rent.exception.AccessDeniedException;
+import com.edu.rent.exception.BadRequestException;
+import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.Rent;
 import com.edu.rent.repository.RentRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +29,7 @@ public class RentService{
     }
 
     public Rent getById(UUID uuid) {
-        return rentRepository.findById(uuid).orElseThrow(() -> new RuntimeException("Аренда не найдена"));
+        return rentRepository.findById(uuid).orElseThrow(() -> new NotFoundException("Аренда не найдена"));
     }
 
     public void delete(UUID uuid) {
@@ -48,12 +51,12 @@ public class RentService{
     public Rent changeStatusOnCancel(UUID uuid, UUID userId) {
         Rent rent = getById(uuid);
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
-            throw new RuntimeException("Пользователь не имеет доступа к данному ресурсу!");
+            throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу");
         }
         if (rent.getStatus().getId().equals((long) 1) || rent.getStatus().getId().equals((long) 2)) {
             rent.setStatus(statusService.getById((long) 5));
         } else {
-            throw new RuntimeException("Невозможно изменить текущий статус в состояние отмены");
+            throw new BadRequestException("Невозможно изменить текущий статус в состояние отмены");
         }
         return rentRepository.save(rent);
     }
@@ -61,12 +64,12 @@ public class RentService{
     public Rent changeStatusOnReturn(UUID uuid, UUID userId) {
         Rent rent = getById(uuid);
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
-            throw new RuntimeException("Пользователь не имеет доступа к данному ресурсу!");
+            throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу!");
         }
         if (rent.getStatus().getId().equals((long) 3)) {
             rent.setStatus(statusService.getById((long) 6));
         } else {
-            throw new RuntimeException("Невозможно изменить текущий статус в состояние возврата");
+            throw new BadRequestException("Невозможно изменить текущий статус в состояние возврата");
         }
         return rentRepository.save(rent);
     }

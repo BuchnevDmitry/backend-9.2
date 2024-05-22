@@ -1,5 +1,6 @@
 package com.edu.rent.service.impl;
 
+import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.ReceivingMethod;
 import com.edu.rent.repository.ReceivingRepository;
 import com.edu.rent.service.CrudService;
@@ -20,7 +21,7 @@ public class ReceivingService implements CrudService<ReceivingMethod, Long> {
 
     @Override
     public ReceivingMethod getById(Long id) {
-        return receivingRepository.findById(id).orElseThrow(() -> new RuntimeException("Способ получения не найден"));
+        return receivingRepository.findById(id).orElseThrow(() -> new NotFoundException("Способ получения не найден"));
     }
 
     @Override
