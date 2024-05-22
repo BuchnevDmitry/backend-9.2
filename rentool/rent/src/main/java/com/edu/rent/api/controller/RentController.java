@@ -1,7 +1,8 @@
 package com.edu.rent.api.controller;
 
 import com.edu.rent.api.mapper.RentMapper;
-import com.edu.rent.api.model.request.RentRequest;
+import com.edu.rent.api.model.request.RentCreateRequest;
+import com.edu.rent.api.model.request.RentUpdateRequest;
 import com.edu.rent.api.model.response.ListRentResponse;
 import com.edu.rent.model.Rent;
 import com.edu.rent.parser.JwtParser;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -96,13 +98,13 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
     public void addRent(
-        @RequestBody @Valid RentRequest rent,
+        @RequestBody @Valid RentCreateRequest rent,
         @RequestHeader("Authorization") String token
     ) {
         log.info("jwt: {}", token);
         UUID userId = jwtParser.getIdFromAccessToken(token);
         log.info("userId: {}", userId);
-        rentService.save(rentMapper.mapToItem(rent), userId);
+        rentService.save(rentMapper.mapCreateRequestToItem(rent), userId);
     }
 
     @Operation(summary = "Удалить аренду")
@@ -127,8 +129,36 @@ public class RentController {
     @PutMapping("/{id}")
     public Rent updateRent(
         @PathVariable @NotNull UUID id,
-        @RequestBody @Valid RentRequest rent
+        @RequestBody @Valid RentUpdateRequest rent
     ) {
-        return rentService.update(id, rentMapper.mapToItem(rent));
+        return rentService.update(id, rentMapper.mapUpdateRequestToItem(rent));
+    }
+
+    @Operation(summary = "Изменить стастус аренды в состояние отмены")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Статус изменён")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{id}/cancel")
+    public Rent changeStatusOnCancel(
+        @PathVariable @NotNull UUID id
+    ) {
+        return rentService.changeStatusOnCancel(id);
+    }
+
+    @Operation(summary = "Изменить стастус аренды в состояние отмены")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Статус изменён")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{id}/return")
+    public Rent changeStatusOnReturn(
+        @PathVariable @NotNull UUID id
+    ) {
+        return rentService.changeStatusOnReturn(id);
     }
 }

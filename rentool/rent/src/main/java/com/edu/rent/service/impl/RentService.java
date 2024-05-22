@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class RentService{
 
     private final RentRepository rentRepository;
-  
+    private final StatusService statusService;
+
     public List<Rent> getAllByUser(UUID uuid, PageRequest pageRequest) {
         return rentRepository.findAllByUserId(uuid, pageRequest).getContent();
     }
@@ -39,6 +40,26 @@ public class RentService{
     public Rent update(UUID uuid, Rent item) {
         Rent rent = getById(uuid);
         rent.setStatus(item.getStatus());
+        return rentRepository.save(rent);
+    }
+
+    public Rent changeStatusOnCancel(UUID uuid) {
+        Rent rent = getById(uuid);
+        if (rent.getStatus().getId().equals(1) || rent.getStatus().getId().equals(2)) {
+            rent.setStatus(statusService.getById((long) 5));
+        } else {
+            throw new RuntimeException("Невозможно изменить текущий статус в состояние отмены");
+        }
+        return rentRepository.save(rent);
+    }
+
+    public Rent changeStatusOnReturn(UUID uuid) {
+        Rent rent = getById(uuid);
+        if (rent.getStatus().getId().equals(3)) {
+            rent.setStatus(statusService.getById((long) 6));
+        } else {
+            throw new RuntimeException("Невозможно изменить текущий статус в состояние возврата");
+        }
         return rentRepository.save(rent);
     }
 }
