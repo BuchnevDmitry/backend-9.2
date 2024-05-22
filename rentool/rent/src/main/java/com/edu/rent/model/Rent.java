@@ -57,6 +57,9 @@ public class Rent {
     @OneToOne
     private ReceivingMethod receivingMethod;
 
+    @OneToOne
+    private TimeReceiving timeReceiving;
+
     private String address;
 
     @ElementCollection
