@@ -1,28 +1,42 @@
 package com.edu.rent.api.mapper;
 
-import com.edu.rent.api.model.request.RentRequest;
+import com.edu.rent.api.model.request.RentCreateRequest;
+import com.edu.rent.api.model.request.RentUpdateRequest;
 import com.edu.rent.model.Rent;
 import com.edu.rent.service.impl.ReceivingService;
 import com.edu.rent.service.impl.StatusService;
+import com.edu.rent.service.impl.TimeReceivingService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public abstract class RentMapper {
     protected StatusService statusService;
     protected ReceivingService receivingService;
+    protected TimeReceivingService timeReceivingService;
 
     @Autowired
     protected void setRentMapper(
         StatusService statusService,
-        ReceivingService receivingService
+        ReceivingService receivingService,
+        TimeReceivingService timeReceivingService
     ) {
         this.statusService = statusService;
         this.receivingService = receivingService;
+        this.timeReceivingService = timeReceivingService;
     }
+
+    @Mapping(target = "status", expression = "java(statusService.getByName(\"AWAITING_CONFIRMATION\"))")
+    @Mapping(target = "receivingMethod", expression = "java(receivingService.getById(rentRequest.receivingMethodId()))")
+    @Mapping(target = "timeReceiving", expression = "java(timeReceivingService.getById(rentRequest.timeReceivingId()))")
+    public abstract Rent mapCreateRequestToItem(RentCreateRequest rentRequest);
 
     @Mapping(target = "status", expression = "java(statusService.getById(rentRequest.statusId()))")
     @Mapping(target = "receivingMethod", expression = "java(receivingService.getById(rentRequest.receivingMethodId()))")
-    public abstract Rent mapToItem(RentRequest rentRequest);
+    @Mapping(target = "timeReceiving", expression = "java(timeReceivingService.getById(rentRequest.timeReceivingId()))")
+    public abstract Rent mapUpdateRequestToItem(RentUpdateRequest rentRequest);
+
+    public abstract void updateRent(Rent source, @MappingTarget Rent target);
 }
