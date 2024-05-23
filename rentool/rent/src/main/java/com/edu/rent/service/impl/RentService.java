@@ -54,7 +54,7 @@ public class RentService{
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу");
         }
-        if (Access.STATUS_CANCEL.getValue().contains(rent.getStatus())) {
+        if (Access.STATUS_CANCEL.getValue().contains(rent.getStatus().getName())) {
             rent.setStatus(statusService.getByName("CANCELED"));
         } else {
             throw new BadRequestException("Невозможно изменить текущий статус в состояние отмены");
@@ -67,7 +67,7 @@ public class RentService{
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу!");
         }
-        if (Access.STATUS_RETURN.getValue().contains(rent.getStatus())) {
+        if (Access.STATUS_RETURN.getValue().contains(rent.getStatus().getName())) {
             rent.setStatus(statusService.getByName("AWAITING_RETURN"));
         } else {
             throw new BadRequestException("Невозможно изменить текущий статус в состояние возврата");
