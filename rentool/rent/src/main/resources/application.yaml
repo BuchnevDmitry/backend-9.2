@@ -3,7 +3,7 @@ spring:
     name: rent
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/${RENT_DB_NAME}
+    url: jdbc:postgresql://${RENT_DB_HOST:localhost}:${RENT_DB_PORT:5434}/${RENT_DB_NAME}
     username: ${RENT_USERNAME}
     password: ${RENT_PASSWORD}
     driverClassName: org.postgresql.Driver

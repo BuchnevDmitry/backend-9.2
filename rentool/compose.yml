@@ -113,7 +113,7 @@ services:
 #      - ./env.dev
 #    networks:
 #      - backend-tool
-  
+
   minio:
     image: minio/minio:latest
     container_name: minio
