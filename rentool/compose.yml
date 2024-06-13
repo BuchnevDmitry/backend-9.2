@@ -102,6 +102,18 @@ services:
 #    networks:
 #      - backend-tool
 
+#  user:
+#    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/user:pr-21
+#    ports:
+#      - "8087:8087"
+#    depends_on:
+#      - postgresql-user
+#      - liquibase-migrations-user
+#    env_file:
+#      - ./env.dev
+#    networks:
+#      - backend-tool
+
   minio:
     image: minio/minio:latest
     container_name: minio
