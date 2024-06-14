@@ -74,4 +74,18 @@ public class RentService{
         }
         return rentRepository.save(rent);
     }
+
+
+    public Rent changeStatusOnExtend(UUID uuid, UUID userId) {
+        Rent rent = getById(uuid);
+        if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
+            throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу!");
+        }
+        if (Access.STATUS_RETURN.getValue().contains(rent.getStatus().getName())) {
+            rent.setStatus(statusService.getByName("EXTENDED"));
+        } else {
+            throw new BadRequestException("Невозможно изменить текущий статус в состояние продления");
+        }
+        return rentRepository.save(rent);
+    }
 }

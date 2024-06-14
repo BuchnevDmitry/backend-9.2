@@ -163,4 +163,20 @@ public class RentController {
         UUID userId = jwtParser.getIdFromAccessToken(token);
         return rentService.changeStatusOnReturn(id, userId);
     }
+
+    @Operation(summary = "Изменить стастус аренды в состояние продления")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Статус изменён")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{id}/extend")
+    public Rent changeStatusOnExtend(
+        @PathVariable @NotNull UUID id,
+        @RequestHeader("Authorization") String token
+    ) {
+        UUID userId = jwtParser.getIdFromAccessToken(token);
+        return rentService.changeStatusOnExtend(id, userId);
+    }
 }
