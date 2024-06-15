@@ -1,17 +1,20 @@
 package com.edu.tool.service.impl;
 
 import com.edu.tool.api.mapper.ToolMapper;
+import com.edu.tool.api.model.request.ToolQuantityUpdateRequest;
+import com.edu.tool.common.ToolParam;
+import com.edu.tool.exception.BadRequestException;
 import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Category;
 import com.edu.tool.model.Tool;
 import com.edu.tool.repository.CategoryRepository;
 import com.edu.tool.repository.ToolRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.edu.tool.service.ImageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,5 +64,29 @@ public class ToolService {
         item.setId(uuid);
         toolMapper.updateTool(item, tool);
         return toolRepository.save(tool);
+    }
+
+    @Transactional
+    public void updateToolQuantities(List<ToolQuantityUpdateRequest> toolUpdates, ToolParam operation) {
+        List<UUID> ids = toolUpdates.stream().map(ToolQuantityUpdateRequest::id).toList();
+        List<Tool> tools = toolRepository.findAllById(ids);
+        if (tools.size() != toolUpdates.size()) {
+            throw new BadRequestException("Некорректный запрос. Инструмента с таким id не существует");
+        }
+        Map<UUID, Integer> updateMap = toolUpdates.stream()
+            .collect(Collectors.toMap(ToolQuantityUpdateRequest::id, ToolQuantityUpdateRequest::count));
+        for (Tool tool : tools) {
+            Integer count = updateMap.get(tool.getId());
+            if (operation.equals(ToolParam.ADD)) {
+                tool.setCount(tool.getCount() + count);
+            } else if (operation.equals(ToolParam.SUBTRACT)) {
+                Long diff = tool.getCount() - count;
+                if (diff < 0) {
+                    throw new BadRequestException("Некорректный запрос. Количество инструментов при вычитании не может быть меньше 0");
+                }
+                tool.setCount(tool.getCount() - count);
+            }
+        }
+
     }
 }

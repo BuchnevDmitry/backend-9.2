@@ -1,4 +1,4 @@
-package com.edu.tool.sort;
+package com.edu.tool.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

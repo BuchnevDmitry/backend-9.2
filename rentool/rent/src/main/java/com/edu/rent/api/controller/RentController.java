@@ -2,6 +2,7 @@ package com.edu.rent.api.controller;
 
 import com.edu.rent.api.mapper.RentMapper;
 import com.edu.rent.api.model.request.RentCreateRequest;
+import com.edu.rent.api.model.request.RentExtendRequest;
 import com.edu.rent.api.model.request.RentUpdateRequest;
 import com.edu.rent.api.model.response.ListRentResponse;
 import com.edu.rent.model.Rent;
@@ -173,10 +174,10 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/extend")
     public Rent changeStatusOnExtend(
-        @PathVariable @NotNull UUID id,
+        @RequestBody RentExtendRequest request,
         @RequestHeader("Authorization") String token
     ) {
         UUID userId = jwtParser.getIdFromAccessToken(token);
-        return rentService.changeStatusOnExtend(id, userId);
+        return rentService.changeStatusOnExtend(request, userId);
     }
 }

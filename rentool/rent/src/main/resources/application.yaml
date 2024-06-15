@@ -1,3 +1,7 @@
+app:
+  tool-url: ${TOOL_HOST_URL:http://localhost:8085/api/v1/tools/}
+
+
 spring:
   application:
     name: rent
