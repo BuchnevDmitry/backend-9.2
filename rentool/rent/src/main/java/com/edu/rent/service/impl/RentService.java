@@ -3,6 +3,7 @@ package com.edu.rent.service.impl;
 import com.edu.rent.access.Access;
 import com.edu.rent.api.mapper.RentMapper;
 import com.edu.rent.api.mapper.ToolMapper;
+import com.edu.rent.api.model.request.RentExtendRequest;
 import com.edu.rent.api.model.request.ToolQuantityUpdateRequest;
 import com.edu.rent.client.ToolClient;
 import com.edu.rent.exception.AccessDeniedException;
@@ -88,12 +89,14 @@ public class RentService{
     }
 
     @Transactional
-    public Rent changeStatusOnExtend(UUID uuid, UUID userId) {
-        Rent rent = getById(uuid);
+    public Rent changeStatusOnExtend(RentExtendRequest request, UUID userId) {
+        Rent rent = getById(request.rentId());
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу!");
         }
         if (Access.STATUS_RETURN.getValue().contains(rent.getStatus().getName())) {
+            rent.setEndDate(request.endDate());
+            rent.setPrice(rent.getPrice() + request.price());
             rent.setStatus(statusService.getByName("EXTENDED"));
         } else {
             throw new BadRequestException("Невозможно изменить текущий статус в состояние продления");
