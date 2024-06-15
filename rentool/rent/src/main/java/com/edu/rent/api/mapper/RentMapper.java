@@ -2,6 +2,7 @@ package com.edu.rent.api.mapper;
 
 import com.edu.rent.api.model.request.RentCreateRequest;
 import com.edu.rent.api.model.request.RentUpdateRequest;
+import com.edu.rent.api.model.request.ToolQuantityUpdateRequest;
 import com.edu.rent.model.Rent;
 import com.edu.rent.service.impl.ReceivingService;
 import com.edu.rent.service.impl.StatusService;
