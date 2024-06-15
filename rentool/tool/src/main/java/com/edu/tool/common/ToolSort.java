@@ -1,4 +1,4 @@
-package com.edu.tool.type;
+package com.edu.tool.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

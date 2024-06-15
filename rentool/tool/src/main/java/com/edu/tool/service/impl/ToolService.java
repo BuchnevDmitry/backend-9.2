@@ -2,7 +2,7 @@ package com.edu.tool.service.impl;
 
 import com.edu.tool.api.mapper.ToolMapper;
 import com.edu.tool.api.model.request.ToolQuantityUpdateRequest;
-import com.edu.tool.type.ToolParam;
+import com.edu.tool.common.ToolParam;
 import com.edu.tool.exception.BadRequestException;
 import com.edu.tool.exception.NotFoundException;
 import com.edu.tool.model.Category;
