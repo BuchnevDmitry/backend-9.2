@@ -1,11 +1,13 @@
 package com.edu.tool.api.contoller;
 
 import com.edu.tool.api.mapper.ToolMapper;
+import com.edu.tool.api.model.request.ToolQuantityUpdateRequest;
 import com.edu.tool.api.model.request.ToolRequest;
 import com.edu.tool.api.model.response.ListToolResponse;
+import com.edu.tool.type.ToolParam;
 import com.edu.tool.model.Tool;
 import com.edu.tool.service.impl.ToolService;
-import com.edu.tool.sort.ToolSort;
+import com.edu.tool.type.ToolSort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -139,5 +142,20 @@ public class ToolController {
         @RequestBody @Valid ToolRequest tool
     ) {
         return toolService.update(id, toolMapper.mapToItem(tool));
+    }
+
+    @Operation(summary = "Обновить количество инструментов")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Количество инструментов обновлено")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/update-quantities")
+    public void updateToolQuantities(
+        @RequestBody @Valid List<ToolQuantityUpdateRequest> toolUpdates,
+        @RequestParam(required = false) ToolParam param
+    ) {
+        toolService.updateToolQuantities(toolUpdates, param);
     }
 }
