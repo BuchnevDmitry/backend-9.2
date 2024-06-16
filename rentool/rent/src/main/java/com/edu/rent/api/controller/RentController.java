@@ -1,11 +1,13 @@
 package com.edu.rent.api.controller;
 
 import com.edu.rent.api.mapper.RentMapper;
+import com.edu.rent.api.model.request.RentCostRequest;
 import com.edu.rent.api.model.request.RentCreateRequest;
 import com.edu.rent.api.model.request.RentExtendRequest;
 import com.edu.rent.api.model.request.RentUpdateRequest;
 import com.edu.rent.api.model.response.ListRentResponse;
 import com.edu.rent.model.Rent;
+import com.edu.rent.model.RentTool;
 import com.edu.rent.parser.JwtParser;
 import com.edu.rent.service.impl.RentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -97,13 +99,13 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
-    public void addRent(
+    public Rent addRent(
         @RequestBody @Valid RentCreateRequest rent,
         @RequestHeader("Authorization") String token
     ) {
         UUID userId = jwtParser.getIdFromAccessToken(token);
         log.info("userId: {}", userId);
-        rentService.save(rentMapper.mapCreateRequestToItem(rent), userId);
+        return rentService.save(rentMapper.mapCreateRequestToItem(rent), userId);
     }
 
     @Operation(summary = "Удалить аренду")
@@ -180,4 +182,20 @@ public class RentController {
         UUID userId = jwtParser.getIdFromAccessToken(token);
         return rentService.changeStatusOnExtend(request, userId);
     }
+
+
+    @Operation(summary = "Получить итоговую стоимость аренды")
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Итоговая стоимость получена")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/calculation-cost")
+    public Long getTools(
+        @RequestBody @NotNull RentCostRequest request
+    ) {
+        return rentService.calculationCost(request);
+    }
 }
+
