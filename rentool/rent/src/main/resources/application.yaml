@@ -1,6 +1,6 @@
 app:
   tool-url: ${TOOL_HOST_URL:http://localhost:8085/api/v1/tools/}
-  scheduler-interval: PT10S
+  scheduler-interval: ${SCHEDULER_INTERVAL:PT10S}
 
 
 spring:
@@ -17,8 +17,8 @@ minio:
   bucket: images-ad
   host: ${MINIO_HOST_TOOL:http://localhost:9000}
   host-image: ${MINIO_HOST_IMAGE:http://localhost:9000}
-  user: minio_user
-  password: minio_password
+  user: ${MINIO_USER:minio_user}
+  password: ${MINIO_PASSWORD:minio_password}
 
 server:
   port: 8086
