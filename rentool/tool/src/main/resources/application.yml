@@ -12,8 +12,8 @@ minio:
   bucket: images
   host: ${MINIO_HOST_TOOL:http://localhost:9000}
   host-image: ${MINIO_HOST_IMAGE:http://localhost:9000}
-  user: minio_user
-  password: minio_password
+  user: ${MINIO_USER:minio_user}
+  password: ${MINIO_PASSWORD:minio_password}
 
 
 server:
