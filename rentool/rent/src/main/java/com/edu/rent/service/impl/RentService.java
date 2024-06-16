@@ -113,6 +113,17 @@ public class RentService{
         return rentRepository.save(rent);
     }
 
+    @Transactional
+    public Rent changeStatusOnComplete(UUID id) {
+        Rent rent = getById(id);
+        if (rent.getStatus().getName().equals("COMPLETED")) {
+            throw new BadRequestException("Данная аренда уже завершена");
+        }
+        toolClient.updateQuantity(toolMapper.mapRentToToolQuantity(rent.getTools()), "ADD");
+        rent.setStatus(statusService.getByName("COMPLETED"));
+        return rentRepository.save(rent);
+    }
+
     public Long calculationCost(RentCostRequest request) {
         List<RentTool> rentTools = request.tools();
         List<UUID> ids = rentTools.stream().map(RentTool::getToolId).toList();
