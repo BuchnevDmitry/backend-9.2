@@ -1,6 +1,8 @@
 package com.edu.rent.client;
 
 import com.edu.rent.api.model.request.ToolQuantityUpdateRequest;
+import com.edu.rent.api.model.response.ListToolResponse;
+import com.edu.rent.api.model.response.ToolResponse;
 import com.edu.rent.exception.ApiErrorResponse;
 import com.edu.rent.exception.BadRequestException;
 import com.edu.rent.exception.InternalServerErrorException;
@@ -14,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -38,6 +41,17 @@ public class ToolClient {
             .retrieve()
             .toBodilessEntity()
             .block();
+    }
+
+    public ListToolResponse fetchTools(List<UUID> toolIds) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("by-ids")
+                    .queryParam("listIds", toolIds.toArray())
+                    .build())
+                .retrieve()
+                .bodyToMono(ListToolResponse.class)
+                .block();
     }
 
     private ExchangeFilterFunction errorHandlingFilter() {
