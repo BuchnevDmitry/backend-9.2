@@ -183,6 +183,21 @@ public class RentController {
         return rentService.changeStatusOnExtend(request, userId);
     }
 
+    @Operation(summary = "Изменить стастус аренды в состояние завершение")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Статус изменён")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/{id}/complete")
+    public Rent changeStatusOnComplete(
+            @PathVariable @NotNull UUID id
+    ) {
+        return rentService.changeStatusOnComplete(id);
+    }
+
+
 
     @Operation(summary = "Получить итоговую стоимость аренды")
     @ApiResponses(value = {
