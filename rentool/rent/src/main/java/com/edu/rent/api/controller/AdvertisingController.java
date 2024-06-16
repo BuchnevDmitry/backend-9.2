@@ -11,7 +11,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class AdvertisingController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Advertising getBrand(@PathVariable Long id) {
+    public Advertising getAdvertising(@PathVariable Long id) {
         return advertisingService.getById(id);
     }
 
@@ -57,9 +59,12 @@ public class AdvertisingController {
                     description = "Рекламный баннер добавлен")
     })
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/")
-    public void addAdvertising(@RequestBody @Valid AdvertisingRequest advertising) {
-        advertisingService.save(advertisingMapper.mapToItem(advertising));
+    @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public void addAdvertising(
+            @RequestPart(value = "image") MultipartFile image,
+            @RequestPart("ad") @Valid AdvertisingRequest advertising
+    ) {
+        advertisingService.save(advertisingMapper.mapToItem(advertising), image);
     }
 
     @Operation(summary = "Удалить рекламный баннер")

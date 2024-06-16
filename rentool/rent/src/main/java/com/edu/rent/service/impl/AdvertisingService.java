@@ -3,9 +3,11 @@ package com.edu.rent.service.impl;
 import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.Advertising;
 import com.edu.rent.repository.AdvertisingRepository;
+import com.edu.rent.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class AdvertisingService {
 
     private final AdvertisingRepository advertisingRepository;
+    private final ImageService imageService;
 
     public List<Advertising> getAllItems(PageRequest pageRequest) {
         return advertisingRepository.findAll(pageRequest).getContent();
@@ -27,7 +30,9 @@ public class AdvertisingService {
         advertisingRepository.deleteById(id);
     }
 
-    public void save(Advertising item) {
+    public void save(Advertising item, MultipartFile image) {
+        String imageUrl = imageService.upload(image);
+        item.setImageUrl(imageUrl);
         advertisingRepository.save(item);
     }
 
