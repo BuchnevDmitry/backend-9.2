@@ -3,20 +3,28 @@ package com.edu.rent.service.impl;
 import com.edu.rent.access.Access;
 import com.edu.rent.api.mapper.RentMapper;
 import com.edu.rent.api.mapper.ToolMapper;
+import com.edu.rent.api.model.request.RentCostRequest;
 import com.edu.rent.api.model.request.RentExtendRequest;
 import com.edu.rent.api.model.request.ToolQuantityUpdateRequest;
+import com.edu.rent.api.model.response.ListToolResponse;
+import com.edu.rent.api.model.response.ToolResponse;
 import com.edu.rent.client.ToolClient;
 import com.edu.rent.exception.AccessDeniedException;
 import com.edu.rent.exception.BadRequestException;
 import com.edu.rent.exception.NotFoundException;
 import com.edu.rent.model.Rent;
+import com.edu.rent.model.RentTool;
 import com.edu.rent.repository.RentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,10 +54,12 @@ public class RentService{
     }
 
     @Transactional
-    public void save(Rent item, UUID userId) {
+    public Rent save(Rent item, UUID userId) {
         item.setUserId(userId);
         toolClient.updateQuantity(toolMapper.mapRentToToolQuantity(item.getTools()), "SUBTRACT");
-        rentRepository.save(item);
+        RentCostRequest rentCostRequest = new RentCostRequest(item.getStartDate(), item.getEndDate(), item.getTools().stream().toList());
+        item.setPrice(calculationCost(rentCostRequest));
+        return rentRepository.save(item);
     }
 
     @Transactional
@@ -96,11 +106,29 @@ public class RentService{
         }
         if (Access.STATUS_RETURN.getValue().contains(rent.getStatus().getName())) {
             rent.setEndDate(request.endDate());
-            rent.setPrice(rent.getPrice() + request.price());
             rent.setStatus(statusService.getByName("EXTENDED"));
         } else {
             throw new BadRequestException("Невозможно изменить текущий статус в состояние продления");
         }
         return rentRepository.save(rent);
+    }
+
+    public Long calculationCost(RentCostRequest request) {
+        List<RentTool> rentTools = request.tools();
+        List<UUID> ids = rentTools.stream().map(RentTool::getToolId).toList();
+        ListToolResponse toolResponse = toolClient.fetchTools(ids);
+        if (toolResponse.size() != ids.size()){
+            throw new BadRequestException("Некорректный запрос. Инструмента с таким id не существует");
+        }
+        Map<UUID, Long> toolMap = rentTools.stream()
+            .collect(Collectors.toMap(RentTool::getToolId, RentTool::getCountTool));
+        long cost = 0L;
+        Duration duration = Duration.between(request.startDate(), request.endDate());
+        long days = duration.toDays();
+        for (ToolResponse tool: toolResponse.tools()) {
+            long costTool = toolMap.get(tool.id()) * tool.priceDay() * days;
+            cost += costTool;
+        }
+        return cost;
     }
 }

@@ -8,8 +8,6 @@ public record RentExtendRequest(
     @NotNull
     UUID rentId,
     @NotNull
-    OffsetDateTime endDate,
-    @NotNull
-    Long price
+    OffsetDateTime endDate
 ) {
 }

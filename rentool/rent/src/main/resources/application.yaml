@@ -1,5 +1,6 @@
 app:
   tool-url: ${TOOL_HOST_URL:http://localhost:8085/api/v1/tools/}
+  scheduler-interval: PT10S
 
 
 spring:
