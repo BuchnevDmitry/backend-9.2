@@ -10,4 +10,5 @@
     <include file="v.1.0.1/cumulative.xml" relativeToChangelogFile="true"/>
     <include file="v.1.0.2/cumulative.xml" relativeToChangelogFile="true"/>
     <include file="v.1.0.3/cumulative.xml" relativeToChangelogFile="true"/>
+    <include file="v.1.0.4/cumulative.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
