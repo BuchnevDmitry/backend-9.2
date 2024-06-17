@@ -8,9 +8,11 @@ import com.edu.tool.common.ToolParam;
 import com.edu.tool.model.Tool;
 import com.edu.tool.service.impl.ToolService;
 import com.edu.tool.common.ToolSort;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
@@ -32,10 +34,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/tools")
+@SecurityRequirement(name = "Keycloak")
+@Validated
 public class ToolController {
     private final ToolService toolService;
     private final ToolMapper toolMapper;
@@ -110,6 +116,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('admin')")
     public void addTool(
         @RequestPart(value = "image") MultipartFile image,
         @RequestPart("tool") ToolRequest tool
@@ -125,6 +132,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public void deleteTool(@PathVariable @NotNull UUID id) {
         toolService.delete(id);
     }
@@ -137,6 +145,7 @@ public class ToolController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public Tool updateTool(
         @PathVariable @NotNull UUID id,
         @RequestBody @Valid ToolRequest tool
@@ -144,13 +153,7 @@ public class ToolController {
         return toolService.update(id, toolMapper.mapToItem(tool));
     }
 
-    @Operation(summary = "Обновить количество инструментов")
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Количество инструментов обновлено")
-    })
-    @ResponseStatus(HttpStatus.OK)
+    @Hidden
     @PatchMapping("/update-quantities")
     public void updateToolQuantities(
         @RequestBody @Valid List<ToolQuantityUpdateRequest> toolUpdates,
