@@ -1,6 +1,11 @@
 spring:
   application:
     name: tool
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/rentool
 
   datasource:
     url: jdbc:postgresql://${TOOL_DB_HOST:localhost}:${TOOL_DB_PORT:5433}/${TOOL_DB_NAME:tool}
@@ -15,6 +20,11 @@ minio:
   user: ${MINIO_USER:minio_user}
   password: ${MINIO_PASSWORD:minio_password}
 
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: kong
+      client-secret: ${SPRINGDOC_CLIENT_SECRET:iL4DtVfRHYgJMi278u5n10n3l0aJ516Q}
 
 server:
   port: 8085
@@ -23,5 +33,5 @@ logging:
   config: classpath:log4j2-plain.xml
 
 app:
-  base-swagger-url: ${TOOL_SWAGGER_URL:https://localhost:8086}
+  base-swagger-url: ${TOOL_SWAGGER_URL:http://localhost:8085}
 
