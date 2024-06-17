@@ -22,4 +22,6 @@ server:
 logging:
   config: classpath:log4j2-plain.xml
 
+app:
+  base-swagger-url: ${TOOL_SWAGGER_URL:https://localhost:8086}
 
