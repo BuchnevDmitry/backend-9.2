@@ -7,11 +7,13 @@ import com.edu.rent.service.impl.AdvertisingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Keycloak")
 @RequestMapping("api/v1/advertising/")
 public class AdvertisingController {
 
@@ -60,6 +63,7 @@ public class AdvertisingController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('admin')")
     public void addAdvertising(
             @RequestPart(value = "image") MultipartFile image,
             @RequestPart("ad") @Valid AdvertisingRequest advertising
@@ -75,6 +79,7 @@ public class AdvertisingController {
     })
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public void deleteAdvertising(@PathVariable Long id) {
         advertisingService.delete(id);
     }
@@ -87,7 +92,8 @@ public class AdvertisingController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
-    public Advertising updateBrand(
+    @PreAuthorize("hasRole('admin')")
+    public Advertising updateAdvertising(
             @PathVariable Long id,
             @RequestBody @Valid AdvertisingRequest advertising
     ) {
