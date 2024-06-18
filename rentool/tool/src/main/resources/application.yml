@@ -33,7 +33,7 @@ logging:
   config: classpath:log4j2-plain.xml
 
 keycloak:
-  openid-connect-url: ${OPENID-URL-TOOL:http://localhost:8180/realms/rentool/.well-known/openid-configuration}
+  openid-connect-url: ${OPENID_URL_TOOL:http://localhost:8180/realms/rentool/.well-known/openid-configuration}
 
 app:
   base-swagger-url: ${TOOL_SWAGGER_URL:http://localhost:8085}
