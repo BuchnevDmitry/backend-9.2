@@ -12,10 +12,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,21 +22,22 @@ public class SecurityConfig {
         throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(HttpMethod.GET,
+            .requestMatchers(
+                HttpMethod.GET,
                 "api/v1/tools/**",
                 "api/v1/brands/**",
                 "api/v1/categories/**",
                 "/swagger-ui/**",
-                "/v3/api-docs/**").permitAll()
-            .requestMatchers(HttpMethod.PATCH,
-                "api/v1/tools/update-quantities")
+                "/v3/api-docs/**"
+            ).permitAll()
+            .requestMatchers(
+                HttpMethod.PATCH,
+                "api/v1/tools/update-quantities"
+            )
             .permitAll()
             .anyRequest().authenticated()
         );
 
-//        http.oauth2ResourceServer(t -> {
-//            t.jwt(Customizer.withDefaults());
-//        });
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter())));
         http.sessionManagement(
             t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -64,45 +61,5 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return converter;
     }
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("*"));
-//        configuration.setAllowedMethods(List.of("*"));
-//        configuration.setAllowedHeaders(List.of("*"));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-//    @Bean
-//    public JwtAuthenticationConverter jwtAuthConverter() {
-//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-//        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        grantedAuthoritiesConverter.setAuthorityPrefix("");
-//        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-//        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-//            var authorities = grantedAuthoritiesConverter.convert(jwt);
-//            var roles = jwt.getClaimAsStringList("roles");
-//
-//            return Stream.concat(authorities.stream(), roles.stream()
-//                .map(SimpleGrantedAuthority::new)
-//                .map(GrantedAuthority.class::cast))
-//                .toList();
-//        });
-//        return converter;
-//    }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*"); // Замените на конкретные домены в production
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 
 }
