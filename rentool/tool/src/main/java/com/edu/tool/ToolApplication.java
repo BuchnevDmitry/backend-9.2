@@ -1,6 +1,7 @@
 package com.edu.tool;
 
 import com.edu.tool.configuration.ApplicationConfig;
+import com.edu.tool.configuration.KeycloakProperties;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -9,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({ApplicationConfig.class})
+@EnableConfigurationProperties({ApplicationConfig.class, KeycloakProperties.class})
 @SecurityScheme(
     name = "Keycloak",
-    openIdConnectUrl = "http://localhost:8180/realms/rentool/.well-known/openid-configuration",
+    openIdConnectUrl = "${keycloak.openid-connect-url}",
     scheme = "bearer",
     type = SecuritySchemeType.OPENIDCONNECT,
     in = SecuritySchemeIn.HEADER

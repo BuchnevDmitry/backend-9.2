@@ -28,6 +28,9 @@ public class SecurityConfig {
                 "api/v1/categories/**",
                 "/swagger-ui/**",
                 "/v3/api-docs/**").permitAll()
+            .requestMatchers(HttpMethod.PATCH,
+                "api/v1/tools/update-quantities")
+            .permitAll()
             .anyRequest().authenticated()
         );
 
