@@ -1,7 +1,7 @@
 app:
   tool-url: ${TOOL_HOST_URL:http://localhost:8085/api/v1/tools/}
   scheduler-interval: ${SCHEDULER_INTERVAL:PT10S}
-  base-swagger-url: ${RENT_SWAGGER_URL:http://localhost:8085}
+  base-swagger-url: ${RENT_SWAGGER_URL:http://localhost:8086}
 
 keycloak:
   openid-connect-url: ${OPENID_URL_RENT:http://localhost:8180/realms/rentool/.well-known/openid-configuration}
