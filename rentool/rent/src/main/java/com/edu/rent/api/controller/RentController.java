@@ -176,11 +176,12 @@ public class RentController {
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/extend")
     public Rent changeStatusOnExtend(
+        @PathVariable @NotNull UUID id,
         @RequestBody RentExtendRequest request,
         @RequestHeader("Authorization") String token
     ) {
         UUID userId = jwtParser.getIdFromAccessToken(token);
-        return rentService.changeStatusOnExtend(request, userId);
+        return rentService.changeStatusOnExtend(id, request, userId);
     }
 
     @Operation(summary = "Изменить стастус аренды в состояние завершение")

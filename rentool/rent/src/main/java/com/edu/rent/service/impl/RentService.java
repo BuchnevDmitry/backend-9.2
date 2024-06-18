@@ -99,8 +99,8 @@ public class RentService{
     }
 
     @Transactional
-    public Rent changeStatusOnExtend(RentExtendRequest request, UUID userId) {
-        Rent rent = getById(request.rentId());
+    public Rent changeStatusOnExtend(UUID rentId, RentExtendRequest request, UUID userId) {
+        Rent rent = getById(rentId);
         if (!rentRepository.existsByIdAndUserId(rent.getId(), userId)) {
             throw new AccessDeniedException("Пользователь не имеет доступа к данному ресурсу!");
         }

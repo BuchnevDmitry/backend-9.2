@@ -89,18 +89,18 @@ services:
     networks:
       - backend-tool
 
-#  tool:
-#    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-18
-#    ports:
-#      - "8085:8085"
-#    depends_on:
-#      - postgresql-tool
-#      - liquibase-migrations-tool
-#      - minio
-#    env_file:
-#      - ./env.dev
-#    networks:
-#      - backend-tool
+  tool:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-32
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgresql-tool
+      - liquibase-migrations-tool
+      - minio
+    env_file:
+      - ./env.dev
+    networks:
+      - backend-tool
 
 #  user:
 #    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/user:pr-21

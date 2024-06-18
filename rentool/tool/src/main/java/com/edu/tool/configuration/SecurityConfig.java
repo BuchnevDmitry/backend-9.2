@@ -22,18 +22,22 @@ public class SecurityConfig {
         throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(authorize -> authorize
-            .requestMatchers(HttpMethod.GET,
+            .requestMatchers(
+                HttpMethod.GET,
                 "api/v1/tools/**",
                 "api/v1/brands/**",
                 "api/v1/categories/**",
                 "/swagger-ui/**",
-                "/v3/api-docs/**").permitAll()
+                "/v3/api-docs/**"
+            ).permitAll()
+            .requestMatchers(
+                HttpMethod.PATCH,
+                "api/v1/tools/update-quantities"
+            )
+            .permitAll()
             .anyRequest().authenticated()
         );
 
-//        http.oauth2ResourceServer(t -> {
-//            t.jwt(Customizer.withDefaults());
-//        });
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter())));
         http.sessionManagement(
             t -> t.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -58,32 +62,4 @@ public class SecurityConfig {
         return converter;
     }
 
-//    @Bean
-//    public JwtAuthenticationConverter jwtAuthConverter() {
-//        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-//        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-//        grantedAuthoritiesConverter.setAuthorityPrefix("");
-//        grantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
-//        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-//            var authorities = grantedAuthoritiesConverter.convert(jwt);
-//            var roles = jwt.getClaimAsStringList("roles");
-//
-//            return Stream.concat(authorities.stream(), roles.stream()
-//                .map(SimpleGrantedAuthority::new)
-//                .map(GrantedAuthority.class::cast))
-//                .toList();
-//        });
-//        return converter;
-//    }
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*"); // Замените на конкретные домены в production
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }

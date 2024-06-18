@@ -6,8 +6,6 @@ import java.util.UUID;
 
 public record RentExtendRequest(
     @NotNull
-    UUID rentId,
-    @NotNull
     OffsetDateTime endDate
 ) {
 }
