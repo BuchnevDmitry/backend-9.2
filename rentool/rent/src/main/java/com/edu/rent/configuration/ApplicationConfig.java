@@ -8,6 +8,9 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = true)
 public record ApplicationConfig(
     @NotEmpty
-    String toolUrl
+    String toolUrl,
+
+    @NotEmpty
+    String baseSwaggerUrl
 ) {
 }

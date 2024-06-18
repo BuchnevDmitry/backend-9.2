@@ -7,7 +7,6 @@ import com.edu.rent.api.model.request.RentExtendRequest;
 import com.edu.rent.api.model.request.RentUpdateRequest;
 import com.edu.rent.api.model.response.ListRentResponse;
 import com.edu.rent.model.Rent;
-import com.edu.rent.model.RentTool;
 import com.edu.rent.parser.JwtParser;
 import com.edu.rent.service.impl.RentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,7 +30,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -52,6 +53,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/")
+    @PreAuthorize("hasRole('admin')")
     public ListRentResponse getRents(
         @RequestParam(required = false, defaultValue = "0") int page,
         @RequestParam(required = false, defaultValue = "10") int size
@@ -68,12 +70,13 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/user")
+    @PreAuthorize("hasRole('user')")
     public ListRentResponse getRentsByUser(
         @RequestParam(required = false, defaultValue = "0") int page,
         @RequestParam(required = false, defaultValue = "10") int size,
-        @RequestHeader("Authorization") String token
+        @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
+        UUID userId = jwtParser.getIdFromToken(jwt);
         log.info("userId: {}", userId);
         List<Rent> rents = rentService.getAllByUser(userId, PageRequest.of(page, size));
         return new ListRentResponse(rents, rents.size());
@@ -87,6 +90,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('user')")
     public Rent getRent(@PathVariable @NotNull UUID id) {
         return rentService.getById(id);
     }
@@ -99,11 +103,12 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @PreAuthorize("hasRole('user')")
     public Rent addRent(
         @RequestBody @Valid RentCreateRequest rent,
-        @RequestHeader("Authorization") String token
+        @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
+        UUID userId = jwtParser.getIdFromToken(jwt);
         log.info("userId: {}", userId);
         return rentService.save(rentMapper.mapCreateRequestToItem(rent), userId);
     }
@@ -116,6 +121,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public void deleteRent(@PathVariable @NotNull UUID id) {
         rentService.delete(id);
     }
@@ -128,6 +134,7 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public Rent updateRent(
         @PathVariable @NotNull UUID id,
         @RequestBody @Valid RentUpdateRequest rent
@@ -143,11 +150,12 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/cancel")
+    @PreAuthorize("hasRole('user')")
     public Rent changeStatusOnCancel(
         @PathVariable @NotNull UUID id,
-        @RequestHeader("Authorization") String token
+        @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
+        UUID userId = jwtParser.getIdFromToken(jwt);
         return rentService.changeStatusOnCancel(id, userId);
     }
 
@@ -159,11 +167,12 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/return")
+    @PreAuthorize("hasRole('user')")
     public Rent changeStatusOnReturn(
         @PathVariable @NotNull UUID id,
-        @RequestHeader("Authorization") String token
+        @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
+        UUID userId = jwtParser.getIdFromToken(jwt);
         return rentService.changeStatusOnReturn(id, userId);
     }
 
@@ -175,30 +184,30 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/extend")
+    @PreAuthorize("hasRole('user')")
     public Rent changeStatusOnExtend(
         @PathVariable @NotNull UUID id,
         @RequestBody RentExtendRequest request,
-        @RequestHeader("Authorization") String token
+        @AuthenticationPrincipal Jwt jwt
     ) {
-        UUID userId = jwtParser.getIdFromAccessToken(token);
+        UUID userId = jwtParser.getIdFromToken(jwt);
         return rentService.changeStatusOnExtend(id, request, userId);
     }
 
     @Operation(summary = "Изменить стастус аренды в состояние завершение")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Статус изменён")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Статус изменён")
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}/complete")
+    @PreAuthorize("hasRole('admin')")
     public Rent changeStatusOnComplete(
-            @PathVariable @NotNull UUID id
+        @PathVariable @NotNull UUID id
     ) {
         return rentService.changeStatusOnComplete(id);
     }
-
-
 
     @Operation(summary = "Получить итоговую стоимость аренды")
     @ApiResponses(value = {
@@ -208,7 +217,8 @@ public class RentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/calculation-cost")
-    public Long getTools(
+    @PreAuthorize("hasRole('user')")
+    public Long calculationCost(
         @RequestBody @NotNull RentCostRequest request
     ) {
         return rentService.calculationCost(request);

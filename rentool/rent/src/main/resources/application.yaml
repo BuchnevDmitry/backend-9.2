@@ -1,11 +1,19 @@
 app:
   tool-url: ${TOOL_HOST_URL:http://localhost:8085/api/v1/tools/}
   scheduler-interval: ${SCHEDULER_INTERVAL:PT10S}
+  base-swagger-url: ${RENT_SWAGGER_URL:http://localhost:8085}
 
+keycloak:
+  openid-connect-url: ${OPENID_URL_RENT:http://localhost:8180/realms/rentool/.well-known/openid-configuration}
 
 spring:
   application:
     name: rent
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER-URI:http://localhost:8180/realms/rentool}
 
   datasource:
     url: jdbc:postgresql://${RENT_DB_HOST:localhost}:${RENT_DB_PORT:5434}/${RENT_DB_NAME}
@@ -22,6 +30,13 @@ minio:
 
 server:
   port: 8086
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: kong
+      client-secret: ${SPRINGDOC_CLIENT_SECRET:iL4DtVfRHYgJMi278u5n10n3l0aJ516Q}
+
 
 
 logging:
