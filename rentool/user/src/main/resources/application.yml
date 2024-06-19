@@ -8,6 +8,21 @@ spring:
     password: ${USER_PASSWORD}
     driverClassName: org.postgresql.Driver
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER-URI:http://localhost:8180/realms/rentool}
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: kong
+      client-secret: ${SPRINGDOC_CLIENT_SECRET:iL4DtVfRHYgJMi278u5n10n3l0aJ516Q}
+
+app:
+  base-swagger-url: ${USER_SWAGGER_URL:http://localhost:8085}
+
 server:
   port: 8087
 
@@ -15,6 +30,7 @@ logging:
   config: classpath:log4j2-plain.xml
 
 keycloak:
+  openid-connect-url: ${OPENID_URL_USER:http://localhost:8180/realms/rentool/.well-known/openid-configuration}
   url: ${KEYCLOACK_HOST:http://localhost:8180}
   realm: ${REALM_NAME:rentool}
   clientId: ${CLIENT_ID:kong}
