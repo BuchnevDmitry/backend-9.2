@@ -29,9 +29,8 @@ public class SecurityConfig {
             ).permitAll()
             .requestMatchers(
                 HttpMethod.POST,
-                "api/v1/users/"
-            )
-            .permitAll()
+                "/api/v1/users/"
+            ).permitAll()
             .anyRequest().authenticated()
         );
 

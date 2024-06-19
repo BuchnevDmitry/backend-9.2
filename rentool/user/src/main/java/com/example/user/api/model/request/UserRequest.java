@@ -6,20 +6,12 @@ import jakarta.validation.constraints.NotEmpty;
 
 public record UserRequest(
     @NotEmpty
-    @Min(1)
-    @Max(100)
     String login,
     @NotEmpty
-    @Min(1)
-    @Max(100)
     String password,
     @NotEmpty
-    @Min(1)
-    @Max(100)
     String firstName,
     @NotEmpty
-    @Min(1)
-    @Max(100)
     String lastName,
     @NotEmpty
     String phone,
