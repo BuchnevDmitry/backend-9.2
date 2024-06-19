@@ -72,7 +72,7 @@ public class UserController {
             description = "Информация получена")
     })
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{id}")
+    @GetMapping("/profile")
     @PreAuthorize("hasRole('user')")
     public User getUser(
         @AuthenticationPrincipal Jwt jwt
