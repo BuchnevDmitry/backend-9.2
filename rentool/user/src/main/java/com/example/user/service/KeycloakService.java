@@ -1,6 +1,7 @@
 package com.example.user.service;
 
 import com.example.user.Credentials;
+import com.example.user.api.model.request.PasswordUpdateRequest;
 import com.example.user.api.model.request.UserRequest;
 import com.example.user.configuration.KeycloakProperties;
 import com.example.user.exception.KeycloakException;
@@ -9,6 +10,8 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -60,6 +63,19 @@ public class KeycloakService {
         userRegistration.setFirstName(userRequest.firstName());
         userRegistration.setLastName(userRequest.lastName());
         return userRegistration;
+    }
+
+    public void changePassword(PasswordUpdateRequest request, UUID userId) {
+        RealmResource realmResource = keycloak.realm(keycloakProperties.realm());
+        UsersResource usersResource = realmResource.users();
+        UserResource userResource = usersResource.get(String.valueOf(userId));
+
+        CredentialRepresentation passwordCred = new CredentialRepresentation();
+        passwordCred.setTemporary(false);
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
+        passwordCred.setValue(request.password());
+
+        userResource.resetPassword(passwordCred);
     }
 
     public UsersResource getInstance(){

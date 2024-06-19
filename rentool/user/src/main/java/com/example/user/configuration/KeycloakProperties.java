@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "keycloak", ignoreUnknownFields = false)
 public record KeycloakProperties(
+    String openidConnectUrl,
     String url,
     String realm,
     String clientId,
