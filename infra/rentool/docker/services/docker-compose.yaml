@@ -1,0 +1,160 @@
+volumes:
+  postgresql-tool: { }
+  postgresql-rent: { }
+  postgresql-user: { }
+  minio-data: { }
+
+networks:
+    backend-tool:
+      name: backend-tool
+      driver: bridge
+    backend-user:
+      name: backend-user
+      driver: bridge
+    backend-rent:
+      name: backend-rent
+      driver: bridge
+
+services:
+  postgresql-tool:
+    image: postgres:16
+    container_name: postgresql-tool
+    ports:
+      - ":5432"
+    env_file:
+      - .env.dev
+    volumes:
+      - postgresql-tool:/var/lib/postgresql/data
+    networks:
+      - backend-tool
+
+  liquibase-migrations-tool:
+    image: liquibase/liquibase:4.25
+    container_name: migrations-tool
+    depends_on:
+      - postgresql-tool
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql-tool:5432/tool
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./resources_tool/db.changelog:/liquibase/changelog
+    networks:
+      - backend-tool
+
+  tool:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/tool:pr-32
+    container_name: tool
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgresql-tool
+      - liquibase-migrations-tool
+      - minio
+    env_file:
+      - .env.dev
+    networks:
+      - backend-tool
+      - backend-rent
+
+  postgresql-rent:
+    image: postgres:16
+    container_name: postgresql-rent
+    ports:
+      - ":5432"
+    env_file:
+      - .env
+    volumes:
+      - postgresql-rent:/var/lib/postgresql/data
+    networks:
+      - backend-rent
+
+  liquibase-migrations-rent:
+    image: liquibase/liquibase:4.25
+    container_name: migrations-rent
+    depends_on:
+      - postgresql-rent
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql-rent:5432/rent
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./resources_rent/db.changelog:/liquibase/changelog
+    networks:
+      - backend-rent
+
+  rent:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/rent:pr-33
+    container_name: rent
+    ports:
+      - "8086:8086"
+    depends_on:
+      - postgresql-rent
+      - liquibase-migrations-rent
+    env_file:
+      - .env
+    networks:
+      - backend-rent
+      - backend-tool
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    networks:
+      - backend-tool
+    env_file:
+      - .env.dev
+    command: server /data --console-address :9090
+    ports:
+      - ':9090'
+      - '9000:9000'
+    volumes:
+      - minio-data:/data
+
+  postgresql-user:
+    image: postgres:16
+    container_name: postgresql-user
+    ports:
+      - ":5432"
+    env_file:
+      - .env.prod
+    volumes:
+      - postgresql-user:/var/lib/postgresql/data
+    networks:
+      - backend-user
+
+  liquibase-migrations-user:
+    image: liquibase/liquibase:4.25
+    container_name: migrations-user
+    depends_on:
+      - postgresql-user
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql-user:5432/user
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./resources_user/db.changelog:/liquibase/changelog
+    networks:
+      - backend-user
+
+  user:
+    image: ghcr.io/buchnevdmitry/backend-9.2/rentool/user:pr-35
+    container_name: user
+    ports:
+      - '8087:8087'
+    depends_on:
+      - postgresql-user
+      - liquibase-migrations-user
+    env_file:
+      - .env.prod
+    networks:
+      - backend-user

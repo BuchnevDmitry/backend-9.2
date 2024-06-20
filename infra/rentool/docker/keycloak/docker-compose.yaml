@@ -1,0 +1,42 @@
+networks:
+  backend-user:
+    name: backend-user
+    driver: bridge
+  backend-tool:
+    name: backend-tool
+    driver: bridge
+
+volumes:
+  keycloak-data:
+    name: keycloak-data
+
+services:
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak_db
+    env_file:
+      - .env.dev
+    ports:
+      - ":5432"
+    networks:
+      - backend-user
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.2
+    container_name: keycloak
+    depends_on:
+      - keycloak-db
+    command:
+      - start
+      - --proxy=edge
+      - --hostname-strict=false
+      - --hostname-strict-https=false
+    env_file:
+      - .env.dev
+    ports:
+      - "8180:8080"
+    networks:
+      - backend-user
+      - backend-tool

@@ -1,0 +1,30 @@
+networks:
+  kong-net:
+    name: kong-net
+    driver: bridge
+
+volumes:
+  kong-data:
+    name: kong-data
+
+services:
+  kong-dbless:
+    image: cristianchiru/docker-kong-oidc:3.4.0-2
+    container_name: kong_api_dbless
+    env_file:
+      - .env.dev
+    ports:
+      - "8000:8000" # Listener
+      - ":8001" # Admin API
+      - ":8002" # Kong OSS
+      - "8443:8443" # Listener (SSL)
+      - ":8444" # Admin API (SSL)
+    networks:
+      - kong-net
+    volumes:
+      - ./configs/:/kong/declarative/
+    healthcheck:
+      test: [ "CMD", "kong", "health" ]
+      interval: 5s
+      timeout: 10s
+      retries: 3
